@@ -46,7 +46,7 @@ const Branch=({filter,countries}) => {
     { 
     Object.entries(filteredCountries[0].languages).map(language => <Language key={language[1]} language={language[1]} />)}
     </ul>
-    <img src={filteredCountries[0].flags.png}  width="400" height="300"></img>
+    <img src={filteredCountries[0].flags.png}  ></img>
     </div>   
   )}
 }
