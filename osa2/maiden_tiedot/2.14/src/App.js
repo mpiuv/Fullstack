@@ -58,30 +58,22 @@ const Branch=({filter, countries, setNewFilter}) => {
 
 const Weather = ({capital, countryCode}) => {
   const api_key = process.env.REACT_APP_API_KEY
-  const [location, setLocation]=useState(' ')
-  const [weather, setWeather]=useState('')
+  const [weather, setWeather]=useState(null)
   let locationString="http://api.openweathermap.org/geo/1.0/direct?q="+capital+",,"+countryCode+"&appid="+api_key
-  const [weatherString, setWeatherString]= useState(' ')
    useEffect(() => {
-    const promise=
+    const promise1=
       axios.get(locationString)
-      promise.then(response => {
-          setLocation(response.data)
-          setWeatherString("https://api.openweathermap.org/data/2.5/weather?lat="+location.lat+"&lon="+location.lon+"&appid="+api_key+"&units=metric")
-          console.log(response.data)
-      })
-  },[locationString])
-
-  useEffect(() => {
-    const promise=
-      axios.get(weatherString)
-      promise.then(response => {
-          setWeather(response.data)
-          console.log(response.data)
-      })
-  },[weatherString])
-  console.log(weather)
-  if(weather==="") return (<></>)
+      promise1.then(response => {
+          let location=response.data
+          let weatherString="https://api.openweathermap.org/data/2.5/weather?lat="+location[0].lat+"&lon="+location[0].lon+"&appid="+api_key+"&units=metric"        
+          const promise=axios.get(weatherString)
+            promise.then(response => {
+              setWeather(response.data)
+      
+            })
+          })
+  },[locationString,api_key])
+  if(weather===null) return (<></>)
   let iconString="http://openweathermap.org/img/wn/"+weather.weather[0].icon+"@2x.png"
   return(<div>
     <p>temperature {weather.main.temp} Celcius</p>
