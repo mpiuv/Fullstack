@@ -111,16 +111,18 @@ const App = () => {
     
             setNewName('')
             setNewNumber('')
-          }).catch (error =>{
-            setErrorMessage(
-              `Person ${newName} was removed from the server`
-            )
-            setTimeout(() => {
-              setErrorMessage(null)
-            }, 3000)
-        
-    
           })              
+       }).catch(error =>{
+        setErrorMessage(
+          `Information of ${newName} has already been deleted from the server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 3000)
+        personService.getAll().then (response =>{setPersons(response.data)})
+        setNewName('')
+        setNewNumber('')
+
        })
       }
     }
