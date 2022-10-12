@@ -140,8 +140,9 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       }).catch (error =>{
+        console.log(error)
         setErrorMessage(
-          `Person ${newName} was removed from the server`
+          JSON.stringify(error.response.data)
         )
         setTimeout(() => {
           setErrorMessage(null)
