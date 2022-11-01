@@ -72,28 +72,19 @@ test('the identifier field is id', async () => {
     expect(response.body).toHaveLength(2)  
 })
 
-test('add a blog',  async () => {
+test('add a blog',   async () => {
   console.log("Hello")
-  const response= await api.post(
-    '/api/blogs?title=\"Type%20wars\"&author=\"Robert%20C.%20Martin\"&url=\"http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html\"&likes=2')
-  
-  console.log(response.status)
-  response.
-  then(result => {
-    console.log(result.body)
-    expect(result.status).toBe(201)
-    api.get('/api/blogs/').
-    then (result2 =>{
-      console.log(result2.body)
-      expect(result2.body.length).toBe(3) 
-    }).
-    catch (error => {
-      console.log(error)
-    })
+  await api.
+  post('/api/blogs').
+  send({
+      title: "Type wars",
+      author: "Robert C. Martin",
+      url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+      likes: 2,
   }).
-  catch(error =>{
-    console.log(error)
-  })
+  expect(201)
+  const result2= await api.get('/api/blogs/')
+  expect(result2.body).toHaveLength(3) 
 })
 
 afterAll(() => {
