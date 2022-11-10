@@ -1,0 +1,11 @@
+post http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYzNmNjYzYzYTU2YjI2MDc3ZDU5ODAwNCIsImlhdCI6MTY2ODA3NjMwOX0.WUbNGojq3l0vyZI4aNA9MHiTXEvkD21uwy-B-nFftSE
+
+{
+   "title": "Blog title",
+   "Author": "Mr. Writer",
+   "url": "http://localhost",
+   "likes": 1,
+   "userId": "636ccc63a56b26077d598004"
+}
