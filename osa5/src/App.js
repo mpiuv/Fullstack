@@ -11,6 +11,9 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newURL, setNewURL] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -35,7 +38,8 @@ const App = () => {
       })
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
-      ) 
+      )
+      blogService.setToken(user.token) 
       setUser(user)
       setUsername('')
       setPassword('')
@@ -83,12 +87,63 @@ const App = () => {
     setUser(null)
   }
 
+  const handleTitleChange = (event) => {
+    setNewTitle(event.target.value)
+  }
+
+  const handleAuthorChange = (event) => {
+    setNewAuthor(event.target.value)
+  }
+
+  const handleURLChange = (event) => {
+    setNewURL(event.target.value)
+  }
+
+  const addBlog = async (event) => {
+    event.preventDefault()
+    const blogObject = {
+      title: newTitle,
+      author: newAuthor,
+      url: newURL
+    }
+    try {
+      await blogService.create(blogObject)
+      setBlogs( await blogService.getAll())
+    } catch (exception){
+      setErrorMessage(exception)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+   }
+
   return (
     <div>
       <h2>blogs</h2>
       <p>{user.username} logged in 
         <button type="submit" onClick={logout}>logout</button>
       </p>
+      <form onSubmit={addBlog}>
+      <div>
+      Title:<input
+        value={newTitle}
+        onChange={handleTitleChange}
+      />
+      </div>
+      <div>
+      Author:<input
+        value={newAuthor}
+        onChange={handleAuthorChange}
+      />
+      </div>
+      <div>
+      URL:<input
+        value={newURL}
+        onChange={handleURLChange}
+      />
+      </div>
+      <button type="submit">create</button>
+    </form>  
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
