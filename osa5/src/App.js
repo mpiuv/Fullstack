@@ -3,11 +3,10 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [newBlog, setNewBlog] = useState('')
-  const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
@@ -15,6 +14,7 @@ const App = () => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newURL, setNewURL] = useState('')
+  const [blogCreateVisible, setBlogCreateVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -102,6 +102,7 @@ const App = () => {
 
   const addBlog = async (event) => {
     event.preventDefault()
+    setBlogCreateVisible(false)
     const blogObject = {
       title: newTitle,
       author: newAuthor,
@@ -126,6 +127,30 @@ const App = () => {
     }
    }
 
+   const blogForm = () => {
+    const hideWhenVisible = { display: blogCreateVisible ? 'none' : '' }
+    const showWhenVisible = { display: blogCreateVisible ? '' : 'none' }
+    return (
+    <div>
+    <div style={hideWhenVisible}>
+      <button onClick={() => setBlogCreateVisible(true)}>Create blog</button>
+    </div>
+    <div style={showWhenVisible}>
+      <BlogForm
+       addBlog={addBlog}
+       handleTitleChange={handleTitleChange}
+       handleAuthorChange={handleAuthorChange}
+       handleURLChange={handleURLChange}
+       newTitle={newTitle}
+       newAuthor={newAuthor}
+       newURL={newURL}
+      />
+      <button onClick={() => setBlogCreateVisible(false)}>cancel</button>
+    </div>
+  </div>
+)
+   }
+
   return (
     <div>
       <h2>blogs</h2>
@@ -133,27 +158,7 @@ const App = () => {
       <p>{user.username} logged in 
         <button type="submit" onClick={logout}>logout</button>
       </p>
-      <form onSubmit={addBlog}>
-      <div>
-      Title:<input
-        value={newTitle}
-        onChange={handleTitleChange}
-      />
-      </div>
-      <div>
-      Author:<input
-        value={newAuthor}
-        onChange={handleAuthorChange}
-      />
-      </div>
-      <div>
-      URL:<input
-        value={newURL}
-        onChange={handleURLChange}
-      />
-      </div>
-      <button type="submit">create</button>
-    </form>  
+      {blogForm()}
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
