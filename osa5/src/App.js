@@ -11,9 +11,6 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newURL, setNewURL] = useState('')
   const [blogCreateVisible, setBlogCreateVisible] = useState(false)
 
   useEffect(() => {
@@ -88,32 +85,11 @@ const App = () => {
     setUser(null)
   }
 
-  const handleTitleChange = (event) => {
-    setNewTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    setNewAuthor(event.target.value)
-  }
-
-  const handleURLChange = (event) => {
-    setNewURL(event.target.value)
-  }
-
-  const addBlog = async (event) => {
-    event.preventDefault()
+  const createBlog = async (blogObject)=>{
     setBlogCreateVisible(false)
-    const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newURL
-    }
     try {
       await blogService.create(blogObject)
       setBlogs( await blogService.getAll())
-      setNewTitle(' ')
-      setNewAuthor(' ')
-      setNewURL(' ')
       setErrorMessage(`A new blog ${blogObject.title} by ${blogObject.author} added`)
       setTimeout(() => {
         setErrorMessage(null)
@@ -124,8 +100,8 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-    }
-   }
+    } 
+  }
 
    const blogForm = () => {
     const hideWhenVisible = { display: blogCreateVisible ? 'none' : '' }
@@ -137,13 +113,7 @@ const App = () => {
     </div>
     <div style={showWhenVisible}>
       <BlogForm
-       addBlog={addBlog}
-       handleTitleChange={handleTitleChange}
-       handleAuthorChange={handleAuthorChange}
-       handleURLChange={handleURLChange}
-       newTitle={newTitle}
-       newAuthor={newAuthor}
-       newURL={newURL}
+       createBlog={createBlog}
       />
       <button onClick={() => setBlogCreateVisible(false)}>cancel</button>
     </div>
@@ -167,3 +137,4 @@ const App = () => {
 }
 
 export default App
+
