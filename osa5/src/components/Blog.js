@@ -1,7 +1,10 @@
 import { useState } from 'react'
+import blogService from '../services/blogs'
 
 const Blog = ({blog}) => {
-  const [blogVisibleState, setBlogVisibleState] = useState(new Map())
+  const [blogVisibleState, setBlogVisibleState] = useState(false)
+  const [liked, setLiked] =useState(0)
+  const [, updateState] = useState();
 
   const blogStyle = {
     paddingTop: 10,
@@ -12,18 +15,31 @@ const Blog = ({blog}) => {
   }
 
   const handleView = () => {
-    setBlogVisibleState(map => new Map(map.set(blog.id, true)));
+    setBlogVisibleState(true);
   }
 
   const handleHide = () => {
-    let bl= new Map(blogVisibleState) 
-    bl.delete(blog.id)
-    setBlogVisibleState(bl);
+    setBlogVisibleState(false);
   }
 
-  const handleLike = () => {}
+  const handleLike = () => {
+    if(blog.likes===undefined)
+      blog.likes=1
+    else 
+      blog.likes=blog.likes+1
+    const newBlog={
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes,
+      user: blog.user.id 
+    }
+    blogService.update(blog.id, newBlog)
+    // Palauttaa blog-objektin eri muodossa, joten heitä roskiin
+    updateState({})
+  }
 
-  if(blogVisibleState.get(blog.id)) {
+  if(blogVisibleState) {
 
     return (
       <div style={blogStyle}>
@@ -47,13 +63,3 @@ const Blog = ({blog}) => {
 }
 
 export default Blog
-
-//const MapStateComponent = () => {
-//  const [mapState, setMapState] = useState(new Map());
-
-//  const updateMap = (key, value) => {
-//    setMapState(map => new Map(map.set(key, value)));
-//  }
-
-  // ...
-//}
