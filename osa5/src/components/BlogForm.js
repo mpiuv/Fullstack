@@ -22,44 +22,44 @@ const BlogForm = ({
   }
 
   const addBlog = async (event) => {
-      event.preventDefault()
-     
-      const blogObject = {
-        title: newTitle,
-        author: newAuthor,
-        url: newURL
-      }
-      createBlog(blogObject)
-      setNewTitle(' ')
-      setNewAuthor(' ')
-      setNewURL(' ')
-     }
+    event.preventDefault()
 
-   return (
-     <div>
-       <form onSubmit={addBlog}>
-      <div>
+    const blogObject = {
+      title: newTitle,
+      author: newAuthor,
+      url: newURL
+    }
+    createBlog(blogObject)
+    setNewTitle(' ')
+    setNewAuthor(' ')
+    setNewURL(' ')
+  }
+
+  return (
+    <div>
+      <form onSubmit={addBlog}>
+        <div>
       Title:<input
-        value={newTitle}
-        onChange={handleTitleChange}
-      />
-      </div>
-      <div>
+            value={newTitle}
+            onChange={handleTitleChange}
+          />
+        </div>
+        <div>
       Author:<input
-        value={newAuthor}
-        onChange={handleAuthorChange}
-      />
-      </div>
-      <div>
+            value={newAuthor}
+            onChange={handleAuthorChange}
+          />
+        </div>
+        <div>
       URL:<input
-        value={newURL}
-        onChange={handleURLChange}
-      />
-      </div>
-      <button type="submit">create</button>
-     </form>
-     </div>
-   )
- }
- 
- export default BlogForm
+            value={newURL}
+            onChange={handleURLChange}
+          />
+        </div>
+        <button type="submit">create</button>
+      </form>
+    </div>
+  )
+}
+
+export default BlogForm

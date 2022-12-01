@@ -8,8 +8,8 @@ import BlogForm from './components/BlogForm'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [blogCreateVisible, setBlogCreateVisible] = useState(false)
   const [rememberUsername, setRememberUsername] = useState('')
@@ -17,7 +17,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -56,25 +56,25 @@ const App = () => {
       <div>
         <h2>Log in to application</h2>
         <form onSubmit={handleLogin}>
-        <div>
+          <div>
           username
             <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
+              type="text"
+              value={username}
+              name="Username"
+              onChange={({ target }) => setUsername(target.value)}
+            />
+          </div>
+          <div>
           password
             <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
+              type="password"
+              value={password}
+              name="Password"
+              onChange={({ target }) => setPassword(target.value)}
+            />
+          </div>
+          <button type="submit">login</button>
         </form>
       </div>
     )
@@ -96,13 +96,12 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-  
     } catch (exception){
       setErrorMessage(""+exception)
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-    } 
+    }
   }
 
   const removeBlog = async (blogId) =>{
@@ -114,19 +113,19 @@ const App = () => {
     const hideWhenVisible = { display: blogCreateVisible ? 'none' : '' }
     const showWhenVisible = { display: blogCreateVisible ? '' : 'none' }
     return (
-    <div>
-    <div style={hideWhenVisible}>
-      <button onClick={() => setBlogCreateVisible(true)}>Create blog</button>
-    </div>
-    <div style={showWhenVisible}>
-      <BlogForm
-       createBlog={createBlog}
-      />
-      <button onClick={() => setBlogCreateVisible(false)}>cancel</button>
-    </div>
-  </div>
-)
-   }
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setBlogCreateVisible(true)}>Create blog</button>
+        </div>
+        <div style={showWhenVisible}>
+          <BlogForm
+            createBlog={createBlog}
+          />
+          <button onClick={() => setBlogCreateVisible(false)}>cancel</button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>
