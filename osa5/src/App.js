@@ -12,6 +12,7 @@ const App = () => {
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
   const [blogCreateVisible, setBlogCreateVisible] = useState(false)
+  const [rememberUsername, setRememberUsername] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -39,6 +40,7 @@ const App = () => {
       )
       blogService.setToken(user.token) 
       setUser(user)
+      setRememberUsername(username)
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -103,7 +105,12 @@ const App = () => {
     } 
   }
 
-   const blogForm = () => {
+  const removeBlog = async (blogId) =>{
+    await blogService.remove(blogId)
+    setBlogs(blogs.filter(blog => blog.id !== blogId))
+  }
+
+  const blogForm = () => {
     const hideWhenVisible = { display: blogCreateVisible ? 'none' : '' }
     const showWhenVisible = { display: blogCreateVisible ? '' : 'none' }
     return (
@@ -130,7 +137,7 @@ const App = () => {
       </p>
       {blogForm()}
       {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} username={rememberUsername} removeBlog={removeBlog}/>
       )}
     </div>
   )
