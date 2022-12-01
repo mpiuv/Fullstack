@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
@@ -68,6 +69,12 @@ const Blog = ({blog, username, removeBlog}) => {
         {blog.title} {blog.author} <button onClick={handleView}> view </button>
         </div>  
     </div>)
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object,
+  username: PropTypes.string,
+  removeBlog: PropTypes.func
 }
 
 export default Blog
