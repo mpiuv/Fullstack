@@ -129,7 +129,7 @@ const App = () => {
         <button type="submit" onClick={logout}>logout</button>
       </p>
       {blogForm()}
-      {blogs.map(blog =>
+      {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
     </div>

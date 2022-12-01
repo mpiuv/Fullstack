@@ -3,7 +3,6 @@ import blogService from '../services/blogs'
 
 const Blog = ({blog}) => {
   const [blogVisibleState, setBlogVisibleState] = useState(false)
-  const [liked, setLiked] =useState(0)
   const [, updateState] = useState();
 
   const blogStyle = {
