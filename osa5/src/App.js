@@ -38,7 +38,7 @@ const App = () => {
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
-      blogService.setToken(user.token) 
+      blogService.setToken(user.token)
       setUser(user)
       setRememberUsername(username)
       setUsername('')
@@ -80,14 +80,14 @@ const App = () => {
     )
   }
 
-  const logout = (event) => {
+  const logout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUsername('')
     setPassword('')
     setUser(null)
   }
 
-  const createBlog = async (blogObject)=>{
+  const createBlog = async (blogObject) => {
     setBlogCreateVisible(false)
     try {
       await blogService.create(blogObject)
@@ -97,14 +97,14 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
     } catch (exception){
-      setErrorMessage(""+exception)
+      setErrorMessage(''+exception)
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     }
   }
 
-  const removeBlog = async (blogId) =>{
+  const removeBlog = async (blogId) => {
     await blogService.remove(blogId)
     setBlogs(blogs.filter(blog => blog.id !== blogId))
   }
@@ -131,7 +131,7 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <Notification message={errorMessage} />
-      <p>{user.username} logged in 
+      <p>{user.username} logged in
         <button type="submit" onClick={logout}>logout</button>
       </p>
       {blogForm()}

@@ -2,9 +2,9 @@ import PropTypes from 'prop-types'
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({blog, username, removeBlog}) => {
+const Blog = ({ blog, username, removeBlog }) => {
   const [blogVisibleState, setBlogVisibleState] = useState(false)
-  const [, updateState] = useState();
+  const [, updateState] = useState()
 
   const blogStyle = {
     paddingTop: 10,
@@ -15,11 +15,11 @@ const Blog = ({blog, username, removeBlog}) => {
   }
 
   const handleView = () => {
-    setBlogVisibleState(true);
+    setBlogVisibleState(true)
   }
 
   const handleHide = () => {
-    setBlogVisibleState(false);
+    setBlogVisibleState(false)
   }
 
   const handleLike = () => {
@@ -39,7 +39,7 @@ const Blog = ({blog, username, removeBlog}) => {
     updateState({})
   }
 
-  const handleRemove= () =>{
+  const handleRemove= () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`))
       removeBlog(blog.id)
   }
@@ -61,7 +61,7 @@ const Blog = ({blog, username, removeBlog}) => {
         </div>
       </div>)
 
-  }else 
+  }else
     return (
       <div style={blogStyle}>
         <div>
