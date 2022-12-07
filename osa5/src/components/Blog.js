@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, username, removeBlog }) => {
+const Blog = ({ blog, username, removeBlog, updateBlog }) => {
   const [blogVisibleState, setBlogVisibleState] = useState(false)
   const [, updateState] = useState()
 
@@ -34,7 +34,8 @@ const Blog = ({ blog, username, removeBlog }) => {
       likes: blog.likes,
       user: blog.user.id
     }
-    blogService.update(blog.id, newBlog)
+    updateBlog(blog.id, newBlog)
+    // blogService.update(blog.id, newBlog)
     // Palauttaa blog-objektin eri muodossa, joten heitä roskiin
     updateState({})
   }

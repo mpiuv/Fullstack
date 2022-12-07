@@ -40,6 +40,28 @@ test('shows the url, the number of likes, user when the view button has been pre
   expect(element).toBeDefined()
   element = screen.getByText('Evil', { exact: false })
   expect(element).toBeDefined()
+})
 
+test('The like-button is pressed twice and its eventhandler is called twice', async() => {
+  const blog = {
+    title: 'Blog title',
+    author: 'A. Author',
+    likes: 1,
+    url: 'http://localhost',
+    user:{ name:'Evil',username:'root' }
+  }
 
+  const mockHandler1 = jest.fn()
+  const mockHandler2 = jest.fn()
+
+  render(<Blog blog={blog} username={'root'} removeBlog={mockHandler1} updateBlog={mockHandler2}/>)
+  let user = userEvent.setup()
+  let button = screen.getByText('view')
+  await user.click(button)
+
+  //user = userEvent.setup()
+  button = screen.getByText('like')
+  await user.click(button)
+  await user.click(button)
+  expect(mockHandler2.mock.calls).toHaveLength(2)
 })

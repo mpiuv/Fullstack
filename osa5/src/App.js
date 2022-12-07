@@ -109,6 +109,10 @@ const App = () => {
     setBlogs(blogs.filter(blog => blog.id !== blogId))
   }
 
+  const updateBlog = (blogId, newBlog) => {
+    blogService.update(blogId, newBlog)
+  }
+
   const blogForm = () => {
     const hideWhenVisible = { display: blogCreateVisible ? 'none' : '' }
     const showWhenVisible = { display: blogCreateVisible ? '' : 'none' }
@@ -136,7 +140,7 @@ const App = () => {
       </p>
       {blogForm()}
       {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-        <Blog key={blog.id} blog={blog} username={rememberUsername} removeBlog={removeBlog}/>
+        <Blog key={blog.id} blog={blog} username={rememberUsername} removeBlog={removeBlog} updateBlog={updateBlog}/>
       )}
     </div>
   )
