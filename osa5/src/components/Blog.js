@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
 const Blog = ({ blog, username, removeBlog, updateBlog }) => {
   const [blogVisibleState, setBlogVisibleState] = useState(false)
