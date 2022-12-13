@@ -44,6 +44,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
+      //      console.log('error')
       setErrorMessage('wrong username or password')
       setTimeout(() => {
         setErrorMessage(null)
@@ -54,6 +55,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
+        <Notification message={errorMessage} />
         <h2>Log in to application</h2>
         <form onSubmit={handleLogin}>
           <div>
@@ -134,7 +136,6 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={errorMessage} />
       <p>{user.username} logged in
         <button type="submit" onClick={logout}>logout</button>
       </p>

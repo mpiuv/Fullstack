@@ -16,6 +16,7 @@ describe('Blog ', function() {
 
   describe('Login',function() {
     it('succeeds with correct credentials', function () {
+      cy.visit('http://localhost:3000')
       cy.get('input:first').type('root')
       cy.get('input:last').type('sekret')
       cy.contains('login').click()
@@ -26,7 +27,7 @@ describe('Blog ', function() {
       cy.get('input:first').type('root1')
       cy.get('input:last').type('sekret')
       cy.contains('login').click()
-      cy.contains('Log in to application')
+      cy.contains('wrong username or password')
     })
   })
 })
