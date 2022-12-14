@@ -51,7 +51,7 @@ const Blog = ({ blog, username, removeBlog, updateBlog }) => {
           {blog.title} {blog.author} <button onClick={handleHide}> hide </button>
         </div>
         <div> {blog.url}<div/>
-          <div>likes {blog.likes} <button onClick={handleLike}> like </button></div>
+          <div>likes {blog.likes} <button id="like" onClick={handleLike}> like </button></div>
           <div>{blog.user.name}</div>
           <div>
             {blog.user.username === username && (
@@ -64,7 +64,7 @@ const Blog = ({ blog, username, removeBlog, updateBlog }) => {
   }else
     return (
       <div style={blogStyle}>
-        <div>
+        <div className="blog">
           {blog.title} {blog.author} <button onClick={handleView}> view </button>
         </div>
       </div>)
