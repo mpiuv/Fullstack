@@ -51,5 +51,24 @@ describe('Blog ', function() {
       cy.contains('Title Author')
     })
 
+    it('A blog can be liked', function() {
+      cy.contains('Create blog').click()
+      cy.get('#title').type('Title')
+      cy.get('#author').type('Author')
+      cy.get('#url').type('http://localhost')
+      cy.contains('create').click()
+      cy.contains('Title Author')
+      it('A blog can be created', function() {
+        cy.contains('Create blog').click()
+        cy.get('#title').type('Title')
+        cy.get('#author').type('Author')
+        cy.get('#url').type('http://localhost')
+        cy.contains('create').click()
+        cy.contains('like').click()
+        cy.contains('likes 1')
+      })
+
+    })
+
   })
 })
