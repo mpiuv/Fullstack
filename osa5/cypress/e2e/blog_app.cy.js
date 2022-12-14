@@ -60,6 +60,18 @@ describe('Blog ', function() {
       cy.contains('view').click()
       cy.contains('like').click()
       cy.contains('likes 1')
-    })  
+    })
+
+    it('A blog can be removed', function() {
+      cy.contains('Create blog').click()
+      cy.get('#title').type('Title')
+      cy.get('#author').type('Author')
+      cy.get('#url').type('http://localhost')
+      cy.contains('create').click()
+      cy.contains('view').click()
+      cy.contains('remove').click()
+      cy.get('Title Author').should('not.exist')
+    })
+
   })
 })
