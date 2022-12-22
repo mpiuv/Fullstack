@@ -22,11 +22,17 @@ const initialState = anecdotesAtStart.map(asObject)
 const reducer = (state = initialState, action) => {
   switch (action.type){
     case 'VOTE': 
-       const a1 = state.filter(anec => anec.id!==action.data)
-       const anecdote= state.filter(anec => anec.id===action.data )[0]
-       anecdote.votes=anecdote.votes+1
-       return a1.concat(anecdote)
-    default: return state
+      const a1 = state.filter(anec => anec.id!==action.data)
+      const anecdote= state.filter(anec => anec.id===action.data )[0]
+      const anecdote2={...anecdote,votes:anecdote.votes+1}
+      return a1.concat(anecdote2)
+    case 'NEW_ANECDOTE':
+      let res1 = state.filter(state => true)
+      return  [...res1, action.data]
+      //console.log(res)
+      //return res
+    default:
+    return state
   }
 }
 
