@@ -1,3 +1,19 @@
+export const addVote = (id) => {
+  return {type: 'VOTE', data:id}
+}
+
+export const newAnecdote = (anecdote) => {
+  const getId = () => (100000 * Math.random()).toFixed(0)
+  return {
+    type: 'NEW_ANECDOTE',
+    data: {
+      content:anecdote,
+      id: getId(),
+      votes: 0
+    }
+  }
+}
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
