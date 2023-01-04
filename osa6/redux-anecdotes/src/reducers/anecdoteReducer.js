@@ -24,7 +24,11 @@ const anecdoteSlice = createSlice({
       const id = action.payload
       const a1 = state.filter(anec => anec.id!==id)
       const anecdote= state.filter(anec => anec.id===id )[0]
-      const anecdote2={...anecdote,votes:anecdote.votes+1}
+      let anecdote2
+      if(anecdote.votes)
+        anecdote2={...anecdote,votes:anecdote.votes+1}
+      else
+        anecdote2={...anecdote,votes:1}
       return a1.concat(anecdote2)
     },
     newAnecdote(state,action){
@@ -43,8 +47,15 @@ const anecdoteSlice = createSlice({
 
 export const initializeAnecdotes = () => {
   return async dispatch => {
-    const notes = await anecdoteService.getAll()
-    dispatch(setAnecdotes(notes))
+    const anecdotes = await anecdoteService.getAll()
+    dispatch(setAnecdotes(anecdotes))
+  }
+}
+
+export const createAnecdote = (content) => {
+  return async dispatch => {
+    const anecdote = await anecdoteService.createNew(content)
+    dispatch(newAnecdote(anecdote))
   }
 }
 
