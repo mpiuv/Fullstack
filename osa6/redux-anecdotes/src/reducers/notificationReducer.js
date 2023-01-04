@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
+
 const initialState = [
     'Initial state']
 const notificationSlice = createSlice({
     name: 'notification',
     initialState,
     reducers: {
-      setNotification(state, action){
+      setNotification_(state, action){
         return {...state,message:action.payload}
       },
       resetNotification(state,action){
@@ -14,5 +15,14 @@ const notificationSlice = createSlice({
     }
 })
 
-export const { setNotification, resetNotification } = notificationSlice.actions
+export const setNotification= (message, time ) =>{
+  return async dispatch => {
+  dispatch (setNotification_(message)) 
+  setTimeout(() => {
+    dispatch(resetNotification());
+  }, time*1000);
+  }
+}
+
+export const { setNotification_, resetNotification } = notificationSlice.actions
 export default notificationSlice.reducer

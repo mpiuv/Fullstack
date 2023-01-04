@@ -21,12 +21,10 @@ const AnecdoteList= () => {
     const votedAnecdote = anecdotes.find((anecdote) => anecdote.id === id);
     dispatch(increaseVote(votedAnecdote))
     dispatch(
-      setNotification(`You voted '${votedAnecdote.content}'` )
-    );
-    setTimeout(() => {
-      dispatch(resetNotification());
-    }, 5000);
-  }
+      setNotification(`You voted '${votedAnecdote.content}'`,5 )
+    )
+    
+   }
   
   return (      
     <div>
