@@ -28,10 +28,11 @@ const anecdoteSlice = createSlice({
     },
     newAnecdote(state,action){
        const anecdote=action.payload
-       const getId = () => (100000 * Math.random()).toFixed(0)
-       const data= {content:anecdote, id: getId(), votes: 0 }
-       let res1 = state.filter(state => true)
-       return  [...res1, data]
+       const data= {...anecdote, votes: 0 }
+       return  [...state, data]
+    },
+    appendAnecdote(state, action) {
+      state.push(action.payload)
     },
     setAnecdotes(state, action) {
       return action.payload
@@ -39,5 +40,5 @@ const anecdoteSlice = createSlice({
   }
 })
 
-export const { addVote,newAnecdote, setAnecdotes } = anecdoteSlice.actions
+export const { addVote, newAnecdote, setAnecdotes, appendAnecdote} = anecdoteSlice.actions
 export default anecdoteSlice.reducer

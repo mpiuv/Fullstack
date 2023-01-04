@@ -11,6 +11,7 @@ const AnecdoteList= () => {
          anecdote.content.toUpperCase().includes(state.filter.filter.toUpperCase())
     )
   })
+  console.log(anecdotes)
   const byVotes = (a1, a2) => a2.votes - a1.votes
   
   const dispatch = useDispatch()
