@@ -1,26 +1,13 @@
 import { useState } from 'react'
 import {
   BrowserRouter as Router,
-  Routes, Route, Link, useNavigate
+  Routes, Route, Link, useNavigate, useParams
 } from "react-router-dom"
-import { useParams } from "react-router-dom"
-
-const Menu = () => {
-  const padding = {
-    paddingRight: 5
-  }
-  return (
-    <div>
-      <a href='#' style={padding}>anecdotes</a>
-      <a href='#' style={padding}>create new</a>
-      <a href='#' style={padding}>about</a>
-    </div>
-  )
-}
+import  { useField } from './hooks'
 
 const Notification = ({ notification }) => {
   return (
-    <div><h1>{notification && notification}</h1></div>
+    <div><h1>{notification}</h1></div>
   )
 }
 
@@ -69,25 +56,25 @@ const Footer = () => (
   </div>
 )
 
-
-
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
 
   const navigate = useNavigate()
+
+  const content_=useField('content')
+  const author_=useField('author')
+  const info_=useField('info')
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content:content_.value,
+      author:author_.value,
+      info:info_.value,
       votes: 0
     })
     navigate('/anecdotes')
   }
+
 
   return (
     <div>
@@ -95,15 +82,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...content_} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...author_} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input {...info_} />
         </div>
         <button>create</button>
       </form>
