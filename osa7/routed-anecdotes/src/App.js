@@ -66,6 +66,8 @@ const CreateNew = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    if (content_.value==='')
+      return
     props.addNew({
       content:content_.value,
       author:author_.value,
@@ -74,7 +76,6 @@ const CreateNew = (props) => {
     })
     navigate('/anecdotes')
   }
-
 
   return (
     <div>
@@ -93,6 +94,9 @@ const CreateNew = (props) => {
           <input {...info_} />
         </div>
         <button>create</button>
+        <button onClick={() =>{content_.reset(); author_.reset(); info_.reset()
+ }}>reset</button>
+
       </form>
     </div>
   )
