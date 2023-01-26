@@ -13,12 +13,13 @@ import userService from './services/user'
 import { createNotification, resetNotification } from './reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 import { setBlogs, addBlog} from './reducers/blogReducer'
+import {setUser} from './reducers/userReducer'
 
 const App = () => {
   const dispatch = useDispatch()
 
   //const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
+  //const [user, setUser] = useState(null)
   //const [notification, setNotification] = useState(null)
   const blogFormRef = useRef()
   const byLikes = (b1, b2) => b2.likes>b1.likes ? 1 : -1
@@ -32,7 +33,7 @@ const App = () => {
   useEffect(() => {
     const userFromStorage = userService.getUser()
     if (userFromStorage) {
-      setUser(userFromStorage)
+      dispatch(setUser(userFromStorage))
     }
   }, [])
 
@@ -40,7 +41,7 @@ const App = () => {
     loginService.login({
       username, password,
     }).then(user => {
-      setUser(user)
+      dispatch(setUser(user))
       userService.setUser(user)
       notify(`${user.name} logged in!`)
     }).catch(() => {
@@ -49,7 +50,7 @@ const App = () => {
   }
 
   const logout = () => {
-    setUser(null)
+    dispatch(setUser(null))
     userService.clearUser()
     notify('good bye!')
   }
@@ -107,6 +108,7 @@ const App = () => {
 
   const notification = useSelector(state => state.notes)[0]
   const blogs = useSelector(state=>state.blogs)
+  const user = useSelector(state=> state.user)[0]
 
   if (user === null) {
     return <>
