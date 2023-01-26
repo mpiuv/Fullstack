@@ -64,7 +64,6 @@ const App = () => {
     })
   }
 
-  let blogs_ =useSelector(state =>state.blosgs)
   const removeBlog = (id) => {
     const toRemove = blogs.find(b => b.id === id)
 
@@ -75,7 +74,7 @@ const App = () => {
     }
 
     blogService.remove(id).then(() => {
-      const updatedBlogs = blogs_
+      const updatedBlogs = blogs
         .filter(b => b.id!==id)
         .sort(byLikes)
       dispatch(setBlogs(updatedBlogs))
@@ -83,7 +82,7 @@ const App = () => {
   }
 
   const likeBlog = async (id) => {
-    const toLike = blogs_.find(b => b.id === id)
+    const toLike = blogs.find(b => b.id === id)
     const liked = {
       ...toLike,
       likes: (toLike.likes||0) + 1,
@@ -92,7 +91,7 @@ const App = () => {
 
     blogService.update(liked.id, liked).then(updatedBlog => {
       notify(`you liked '${updatedBlog.title}' by ${updatedBlog.author}`)
-      const updatedBlogs = blogs_
+      const updatedBlogs = blogs
         .map(b => b.id===id ? updatedBlog : b)
         .sort(byLikes)
       dispatch(setBlogs(updatedBlogs))
