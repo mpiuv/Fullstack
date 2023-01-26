@@ -12,11 +12,12 @@ import userService from './services/user'
 
 import { createNotification, resetNotification } from './reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
+import { setBlogs, addBlog} from './reducers/blogReducer'
 
 const App = () => {
   const dispatch = useDispatch()
 
-  const [blogs, setBlogs] = useState([])
+  //const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   //const [notification, setNotification] = useState(null)
   const blogFormRef = useRef()
@@ -24,7 +25,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs.sort(byLikes) )
+      dispatch(setBlogs( blogs.sort(byLikes) ))
     )
   }, [])
 
@@ -56,13 +57,14 @@ const App = () => {
   const createBlog = async (blog) => {
     blogService.create(blog).then(createdBlog => {
       notify(`a new blog '${createdBlog.title}' by ${createdBlog.author} added`)
-      setBlogs(blogs.concat(createdBlog))
+      dispatch(addBlog(createdBlog))
       blogFormRef.current.toggleVisibility()
     }).catch(error => {
       notify('creating a blog failed: ' + error.response.data.error, 'alert')
     })
   }
 
+  let blogs_ =useSelector(state =>state.blosgs)
   const removeBlog = (id) => {
     const toRemove = blogs.find(b => b.id === id)
 
@@ -73,15 +75,15 @@ const App = () => {
     }
 
     blogService.remove(id).then(() => {
-      const updatedBlogs = blogs
+      const updatedBlogs = blogs_
         .filter(b => b.id!==id)
         .sort(byLikes)
-      setBlogs(updatedBlogs)
+      dispatch(setBlogs(updatedBlogs))
     })
   }
 
   const likeBlog = async (id) => {
-    const toLike = blogs.find(b => b.id === id)
+    const toLike = blogs_.find(b => b.id === id)
     const liked = {
       ...toLike,
       likes: (toLike.likes||0) + 1,
@@ -90,10 +92,10 @@ const App = () => {
 
     blogService.update(liked.id, liked).then(updatedBlog => {
       notify(`you liked '${updatedBlog.title}' by ${updatedBlog.author}`)
-      const updatedBlogs = blogs
+      const updatedBlogs = blogs_
         .map(b => b.id===id ? updatedBlog : b)
         .sort(byLikes)
-      setBlogs(updatedBlogs)
+      dispatch(setBlogs(updatedBlogs))
     })
   }
 
@@ -104,8 +106,8 @@ const App = () => {
     }, 5000)
   }
 
-  const notification = useSelector(state => state)[0]
-  console.log(notification)
+  const notification = useSelector(state => state.notes)[0]
+  const blogs = useSelector(state=>state.blogs)
 
   if (user === null) {
     return <>
@@ -125,7 +127,7 @@ const App = () => {
         <button onClick={logout}>logout</button>
       </div>
 
-      <Togglable buttonLabel='new note' ref={blogFormRef}>
+      <Togglable buttonLabel='new blog' ref={blogFormRef}>
         <NewBlogForm
           onCreate={createBlog}
         />
