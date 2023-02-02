@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import {useState, useEffect, useRef } from 'react'
 
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
@@ -9,18 +9,21 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import userService from './services/user'
+import usersService from './services/users'
 
 import { createNotification, resetNotification } from './reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 import { setBlogs, addBlog} from './reducers/blogReducer'
 import {setUser} from './reducers/userReducer'
+import {
+  BrowserRouter as Router,
+  Routes, Route, Link
+} from "react-router-dom"
+
 
 const App = () => {
   const dispatch = useDispatch()
 
-  //const [blogs, setBlogs] = useState([])
-  //const [user, setUser] = useState(null)
-  //const [notification, setNotification] = useState(null)
   const blogFormRef = useRef()
   const byLikes = (b1, b2) => b2.likes>b1.likes ? 1 : -1
 
@@ -28,14 +31,14 @@ const App = () => {
     blogService.getAll().then(blogs =>
       dispatch(setBlogs( blogs.sort(byLikes) ))
     )
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     const userFromStorage = userService.getUser()
     if (userFromStorage) {
       dispatch(setUser(userFromStorage))
     }
-  }, [])
+  }, [dispatch])
 
   const login = async (username, password) => {
     loginService.login({
@@ -109,6 +112,75 @@ const App = () => {
   const notification = useSelector(state => state.notes)[0]
   const blogs = useSelector(state=>state.blogs)
   const user = useSelector(state=> state.user)[0]
+  const padding = {
+    padding: 5
+  }
+
+const Home = () => {
+  return (
+  <div>
+ </div>
+  )
+}
+
+const Blogs = () =>{
+  return (
+  <div>
+  <Togglable buttonLabel='new blog' ref={blogFormRef}>
+  <NewBlogForm
+    onCreate={createBlog}
+  />
+</Togglable>
+
+<div id='blogs'>
+  {blogs.map(blog =>
+    <Blog
+      key={blog.id}
+      blog={blog}
+      likeBlog={likeBlog}
+      removeBlog={removeBlog}
+      user={user}
+    />
+  )}
+</div>
+</div>)
+
+}
+
+const [users,setUsers] = useState([])
+
+useEffect(() => {
+   usersService.getAll().then(response =>setUsers(response))
+  }, [])
+
+const User = ({blogs,user})=>{
+  return( 
+    <tr>
+      <td>{user}</td>
+      <td>{blogs}</td>
+    </tr>)
+}
+
+const Users=() =>{
+  return <div>
+    <h2>Users</h2>
+    <div id='users'>
+    <table>
+  <tr>
+    <th></th>
+    <th>blogs created</th>
+  </tr>
+  {users.map(user =>
+    <User
+      key={user.id}
+      blogs={user.blogs.length}
+      user={user.name}
+    />
+  )}
+  </table>
+</div>
+ </div> 
+}
 
   if (user === null) {
     return <>
@@ -119,8 +191,7 @@ const App = () => {
 
   return (
     <div>
-      <h2>blogs</h2>
-
+       <h2>blogs</h2>
       <Notification notification={notification} />
 
       <div>
@@ -128,24 +199,21 @@ const App = () => {
         <button onClick={logout}>logout</button>
       </div>
 
-      <Togglable buttonLabel='new blog' ref={blogFormRef}>
-        <NewBlogForm
-          onCreate={createBlog}
-        />
-      </Togglable>
+  <Router>
+  <div>
+    <Link style={padding} to="/">home</Link>
+    <Link style={padding} to="/blogs">blogs</Link>
+    <Link style={padding} to="/users">users</Link>
+  </div>
 
-      <div id='blogs'>
-        {blogs.map(blog =>
-          <Blog
-            key={blog.id}
-            blog={blog}
-            likeBlog={likeBlog}
-            removeBlog={removeBlog}
-            user={user}
-          />
-        )}
-      </div>
-    </div>
+  <Routes>
+    <Route path="/blogs" element={<Blogs />} />
+    <Route path="/users" element={<Users />} />
+    <Route path="/" element={<Home />} />
+  </Routes>
+
+</Router>
+</div>
   )
 }
 
