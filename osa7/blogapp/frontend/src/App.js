@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setBlogs, addBlog} from './reducers/blogReducer'
 import {setUser} from './reducers/userReducer'
 import {
+  useParams,
   BrowserRouter as Router,
   Routes, Route, Link
 } from "react-router-dom"
@@ -156,7 +157,7 @@ useEffect(() => {
 const User = ({blogs,user})=>{
   return( 
     <tr>
-      <td>{user}</td>
+      <td><Link to={`/user/${user.id}`}>{user.name}</Link></td>
       <td>{blogs}</td>
     </tr>)
 }
@@ -174,12 +175,32 @@ const Users=() =>{
     <User
       key={user.id}
       blogs={user.blogs.length}
-      user={user.name}
+      user={{name:user.name,id:user.id}}
     />
   )}
   </table>
 </div>
  </div> 
+}
+
+const UsersBlogs=({users}) =>{
+  const id = useParams().id
+  console.log(id)
+  console.log(users)
+  const user = users.find(n => n.id === id)
+  console.log(user)
+  return (
+    <div>
+      <h2>{user.name}</h2>
+      <h1>added blogs</h1>
+      <ul>
+      {user.blogs.map(blog =>
+        <li key={blog.id}> {blog.title}</li>
+    )}
+  </ul>
+    </div>
+  )
+
 }
 
   if (user === null) {
@@ -209,6 +230,7 @@ const Users=() =>{
   <Routes>
     <Route path="/blogs" element={<Blogs />} />
     <Route path="/users" element={<Users />} />
+    <Route path="/user/:id" element={<UsersBlogs users={users} />} />
     <Route path="/" element={<Home />} />
   </Routes>
 
