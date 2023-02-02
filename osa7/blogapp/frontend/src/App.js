@@ -5,7 +5,7 @@ import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import UsersBlogs from './components/UserBlogs'
+import UsersBlogs from './components/UsersBlogs'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setBlogs, addBlog} from './reducers/blogReducer'
 import {setUser} from './reducers/userReducer'
 import {
+  useParams,
   BrowserRouter as Router,
   Routes, Route, Link
 } from "react-router-dom"
@@ -145,7 +146,21 @@ const Blogs = () =>{
   )}
 </div>
 </div>)
+}
 
+const SingleBlog = ({blogs})=>{
+  const id = useParams().id
+  const blog = blogs.find(n => n.id === id)
+  return (<div>
+    <h1>{blog.title} {blog.author}</h1>
+    <div>
+    <a href={blog.url}>{blog.url}</a>
+    </div>
+    <div>
+    {blog.likes} likes <button onClick={() => likeBlog(blog.id)}>like</button>
+    </div>
+    <p>added by {blog.author}</p>
+</div>)
 }
 
 const [users,setUsers] = useState([])
@@ -183,7 +198,6 @@ const Users=() =>{
  </div> 
 }
 
-
   if (user === null) {
     return <>
       <Notification notification={notification} />
@@ -210,6 +224,7 @@ const Users=() =>{
 
   <Routes>
     <Route path="/blogs" element={<Blogs />} />
+    <Route path="/blogs/:id" element={<SingleBlog blogs={blogs}/>} />
     <Route path="/users" element={<Users />} />
     <Route path="/user/:id" element={<UsersBlogs users={users} />} />
     <Route path="/" element={<Home />} />
