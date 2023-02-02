@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import UsersBlogs from './components/UserBlogs'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -16,7 +17,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setBlogs, addBlog} from './reducers/blogReducer'
 import {setUser} from './reducers/userReducer'
 import {
-  useParams,
   BrowserRouter as Router,
   Routes, Route, Link
 } from "react-router-dom"
@@ -183,25 +183,6 @@ const Users=() =>{
  </div> 
 }
 
-const UsersBlogs=({users}) =>{
-  const id = useParams().id
-  console.log(id)
-  console.log(users)
-  const user = users.find(n => n.id === id)
-  console.log(user)
-  return (
-    <div>
-      <h2>{user.name}</h2>
-      <h1>added blogs</h1>
-      <ul>
-      {user.blogs.map(blog =>
-        <li key={blog.id}> {blog.title}</li>
-    )}
-  </ul>
-    </div>
-  )
-
-}
 
   if (user === null) {
     return <>
