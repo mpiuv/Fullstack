@@ -209,17 +209,12 @@ const Users=() =>{
     <div>
        <h2>blogs</h2>
       <Notification notification={notification} />
-
-      <div>
-        {user.name} logged in
-        <button onClick={logout}>logout</button>
-      </div>
-
   <Router>
   <div>
     <Link style={padding} to="/">home</Link>
     <Link style={padding} to="/blogs">blogs</Link>
     <Link style={padding} to="/users">users</Link>
+            {user.name} logged in <button onClick={logout}>logout</button>
   </div>
 
   <Routes>
