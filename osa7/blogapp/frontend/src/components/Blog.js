@@ -5,29 +5,7 @@ import {
   Routes, Route, Link
 } from "react-router-dom"
 
-const BlogDetails = ({ blog, visible, likeBlog, removeBlog, own }) => {
-  if (!visible) return null
-
-  const addedBy = blog.user && blog.user.name ? blog.user.name : 'anonymous'
-
-  return (
-    <div>
-      <div>
-        <a href={blog.url}>{blog.url}</a>
-      </div>
-      <div>
-        {blog.likes} likes <button onClick={() => likeBlog(blog.id)}>like</button>
-      </div>
-      {addedBy}
-      {own&&<button onClick={() => removeBlog(blog.id)}>
-        remove
-      </button>}
-    </div>
-  )
-}
-
 const Blog = ({ blog, likeBlog, removeBlog, user }) => {
-  const [visible, setVisible] = useState(false)
 
   const style = {
     padding: 3,
