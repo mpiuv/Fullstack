@@ -1,6 +1,5 @@
 import {useState, useEffect, useRef } from 'react'
 
-import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
@@ -21,7 +20,18 @@ import {
   BrowserRouter as Router,
   Routes, Route, Link
 } from "react-router-dom"
-
+import { Container } from '@mui/material'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+  AppBar,
+  Toolbar,
+  Button
+} from '@mui/material'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -134,17 +144,22 @@ const Blogs = () =>{
   />
 </Togglable>
 
-<div id='blogs'>
-  {blogs.map(blog =>
-    <Blog
-      key={blog.id}
-      blog={blog}
-      likeBlog={likeBlog}
-      removeBlog={removeBlog}
-      user={user}
-    />
+<TableContainer component={Paper}>
+  <Table>
+    <TableBody>
+      {blogs.map(blog =>
+         <TableRow key={blog.id}>
+             <TableCell>
+                <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+             </TableCell>
+             <TableCell>
+                {blog.author}
+             </TableCell>
+         </TableRow>
   )}
-</div>
+   </TableBody>
+  </Table>
+</TableContainer>
 </div>)
 }
 
@@ -210,21 +225,23 @@ useEffect(() => {
 
 const User = ({blogs,user})=>{
   return( 
-    <tr>
-      <td><Link to={`/user/${user.id}`}>{user.name}</Link></td>
-      <td>{blogs}</td>
-    </tr>)
+    <TableRow key={user.id}>
+      <TableCell><Link to={`/user/${user.id}`}>{user.name}</Link></TableCell>
+      <TableCell>{blogs}</TableCell>
+    </TableRow>)
 }
 
 const Users=() =>{
   return <div>
     <h2>Users</h2>
     <div id='users'>
-    <table>
-  <tr>
-    <th></th>
-    <th>blogs created</th>
-  </tr>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableBody>
+          <TableRow key={1}>
+              <TableCell></TableCell> <TableCell>blogs created</TableCell>
+          </TableRow>
+  
   {users.map(user =>
     <User
       key={user.id}
@@ -232,7 +249,9 @@ const Users=() =>{
       user={{name:user.name,id:user.id}}
     />
   )}
-  </table>
+  </TableBody>
+  </Table>
+  </TableContainer>
 </div>
  </div> 
 }
@@ -245,16 +264,25 @@ const Users=() =>{
   }
 
   return (
-    <div>
+    <Container>
        <h2>blogs</h2>
       <Notification notification={notification} />
   <Router>
-  <div>
-    <Link style={padding} to="/">home</Link>
-    <Link style={padding} to="/blogs">blogs</Link>
-    <Link style={padding} to="/users">users</Link>
-            {user.name} logged in <button onClick={logout}>logout</button>
-  </div>
+
+  <AppBar position="static">
+  <Toolbar>
+    <Button color="inherit" component={Link} to="/">
+      home
+    </Button>
+    <Button color="inherit" component={Link} to="/blogs">
+      blogs
+    </Button>
+    <Button color="inherit" component={Link} to="/users">
+      users
+    </Button>   
+            <em>{user.name} logged in</em> <button onClick={logout}>logout</button>
+  </Toolbar>
+  </AppBar>
 
   <Routes>
     <Route path="/blogs" element={<Blogs />} />
@@ -265,7 +293,7 @@ const Users=() =>{
   </Routes>
 
 </Router>
-</div>
+</Container>
   )
 }
 

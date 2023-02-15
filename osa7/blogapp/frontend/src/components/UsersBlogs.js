@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom"
-
+import {TableContainer,TableBody,Table,TableRow,TableCell, Paper} from '@mui/material'
 const UsersBlogs=({users}) =>{
     const id = useParams().id
     const user = users.find(n => n.id === id)
@@ -7,11 +7,15 @@ const UsersBlogs=({users}) =>{
       <div>
         <h2>{user.name}</h2>
         <h1>added blogs</h1>
-        <ul>
+        <TableContainer component={Paper}>
+        <Table>
+        <TableBody>
         {user.blogs.map(blog =>
-          <li key={blog.id}> {blog.title}</li>
+          <TableRow key={blog.id}> <TableCell>{blog.title}</TableCell></TableRow>
       )}
-    </ul>
+    </TableBody>
+    </Table>
+    </TableContainer>
       </div>
     )
   

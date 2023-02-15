@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { TextField, Button } from '@mui/material'
 
 const LoginForm = ({ onLogin }) => {
   const [username, setUsername] = useState('')
@@ -15,7 +16,9 @@ const LoginForm = ({ onLogin }) => {
 
       <form onSubmit={handleSubmit}>
         <div>
-          username
+        <div>
+          <TextField label="username" />
+        </div>
           <input
             value={username}
             onChange={({ target }) => setUsername(target.value)}
@@ -23,7 +26,10 @@ const LoginForm = ({ onLogin }) => {
           />
         </div>
         <div>
-          password
+        <div>
+          <TextField label="password" type='password' />
+        </div>
+
           <input
             type="password"
             value={password}
@@ -31,9 +37,11 @@ const LoginForm = ({ onLogin }) => {
             id="password"
           />
         </div>
-        <button id="login-button" type="submit">
-          login
-        </button>
+        <div>
+          <Button variant="contained" color="primary" type="submit">
+            login
+          </Button>
+        </div>
       </form>
     </div>
   )
