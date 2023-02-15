@@ -149,8 +149,26 @@ const Blogs = () =>{
 }
 
 const SingleBlog = ({blogs})=>{
+  const [comment, setComment] = useState('')
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    let blog1 = {...blog}
+    blog1.comments= [...blog.comments,comment]
+
+    blogService.updateComment(id,blog1).then((response) => {
+      let updatedBlogs = blogs
+        .filter(b => b.id!==id)
+        .sort(byLikes)
+      updatedBlogs=[...updatedBlogs,response]
+      dispatch(setBlogs(updatedBlogs))
+    })
+    setComment('')
+  }
+
   const id = useParams().id
-  const blog = blogs.find(n => n.id === id)
+  let blog = blogs.find(n => n.id === id)
+  if (blog==={}) return (null)
   return (<div>
     <h1>{blog.title} {blog.author}</h1>
     <div>
@@ -161,6 +179,19 @@ const SingleBlog = ({blogs})=>{
     </div>
     <p>added by {blog.author}</p>
     <h2>comments</h2>
+    <form onSubmit={handleSubmit}>
+        <div>
+          comment
+          <input
+            value={comment}
+            onChange={({ target }) => setComment(target.value)}
+            id='comment'
+          />
+        </div>
+        <button id='create-button' type='submit'>
+          add comment
+        </button>
+    </form>
     <ul>
     {blog.comments.map(c =>
       <li key={c}>

@@ -49,15 +49,14 @@ router.delete('/:id', async (request, response) => {
 })
 
 router.put('/:id/comments', async (request, response) => {
-  const blog = request.body
-
+  const blog = request.body.newObject
+  blog.user=blog.user.id
   const updatedBlog = await Blog
     .findByIdAndUpdate(
-      request.params.id, 
+      request.params.id.trim(), 
       blog, 
       { new: true, runValidators: true, context: 'query' }
     ).populate('user', { username: 1, name: 1 })
-      
   response.json(updatedBlog)
 })
 

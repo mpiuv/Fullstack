@@ -26,8 +26,13 @@ const update = (id, newObject) => {
   return request.then(response => response.data)
 }
 
+const updateComment = (id, newObject) => {
+  const request = axios.put(`${baseUrl}/${id}/comments`, {newObject})
+  return request.then(response => { return response.data})
+}
+
 const remove = (id) => {
   return axios.delete(`${baseUrl}/${id}`, config())
 }
 
-export default { getAll, create, update, remove }
+export default { getAll, create, update, updateComment, remove }
