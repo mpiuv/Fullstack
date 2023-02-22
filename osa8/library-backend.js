@@ -102,6 +102,10 @@ type Book {
   genres: [String!]!
 }
 
+type Author {
+  name:String,
+  born: Int}
+
 type AuthorAndBookCount {
  name:String,
  born: Int,
@@ -122,6 +126,10 @@ type Mutation {
     published: Int!,
     genres: [String]!
   ): Book
+}
+
+type Mutation {
+  editAuthor(name: String!, setBornTo: Int!):Author 
 }
 `
 const { v1: uuid } = require('uuid')
@@ -156,7 +164,16 @@ const resolvers = {
         authors=authors.concat(author)
       }
       return book
-    }
+    },
+    editAuthor: (root, args) =>{
+      if(!authors.find(a => a.name===args.name))
+        return null
+      else{
+        const inx=authors.findIndex(a => a.name===args.name)
+        authors[inx].born=args.setBornTo
+        return authors[inx]
+      }   
+    } 
   }
 }
 
