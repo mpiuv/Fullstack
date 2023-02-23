@@ -11,7 +11,7 @@ const AUTHOR_AND_BOOK_COUNT = gql`
 `
 
 const Authors = (props) => {
-  const result = useQuery(AUTHOR_AND_BOOK_COUNT)
+  const result = useQuery(AUTHOR_AND_BOOK_COUNT, {pollInterval: 2000})
   if (!props.show) {
     return null
   }
