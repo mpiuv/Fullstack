@@ -1,9 +1,11 @@
 const mongoose = require('mongoose')
-mongoose.set('strictQuery', false)
+// Mongoose@6.0.0 in use
+//mongoose.set('strictQuery', false)
 const Book = require('./models/Book')
 const Author = require('./models/Author')
 
-const { ApolloServer } = require('@apollo/server')
+const { ApolloServer} = require('@apollo/server')
+const {gql} =require ('graphql-tag')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 
 require('dotenv').config()
@@ -112,18 +114,20 @@ let books = [
   },
 ]
 
-const typeDefs = `
-type Book {
-  title: String!,
-  published: Int!,
-  author: String!,
-  genres: [String!]!,
+const typeDefs =  gql`
+type Author_ {
+  name:String!,
+  born: Int,
   id: ID!
 }
 
-type Author {
-  name:String,
-  born: Int}
+type Book {
+  title: String!
+  published: Int!
+  author:Author_! 
+  genres: [String!]!
+  id: ID!
+}
 
 type AuthorAndBookCount {
  name:String,
@@ -148,7 +152,7 @@ type Mutation {
 }
 
 type Mutation {
-  editAuthor(name: String!, setBornTo: Int!):Author 
+  editAuthor(name: String!, setBornTo: Int!):Author_ 
 }
 `
 const { v1: uuid } = require('uuid')
@@ -156,36 +160,51 @@ const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () =>Author.collection.countDocuments() ,
-    allBooks: async (root, args) => {if (args.author!==undefined) 
-                                return books.filter(b => b.author === args.author)
+    allBooks: async (root, args) => {
+                              if (args.author!==undefined) {
+                                const author=await Author.find({name:args.author})
+                                return await Book.find({author:author[0]._id}).populate("author")}
                               else if (args.genre!==undefined)
-                                return books.filter(b => b.genres.find(e => e===args.genre))
-                              else 
-                                return await Book.find({})},
+                                return await Book.find({"genres":{$eq:args.genre}}).populate("author")
+                              else {
+                                const books=await Book.find({}).populate("author")
+                                return books
+                              }},
     allAuthors: async () => await Author.find({}),
   },
   AuthorAndBookCount:{
     name: (root) => root.name,
-    bookCount: (root) => books.filter(b => b.author===root.name).length
+    bookCount: async (root) => {
+      let author=await Author.find({name:root.name})
+      if (author.length===0){
+        author=new Author({name:root.name})
+        author=await author.save()
+      }
+      console.log(author)
+      return (await Book.find({author:author._id})).length
+    }
   },
   Mutation: {
     addBook: async (root, args) => {
+      let author=await Author.find({name:args.author})
+      if (author.length===0){
+        author=new Author({name:args.author})
+        author=await author.save()
+      }
       const book=new Book({
         title: args.title,
         published: args.published,
-        author: args.author,
+        author: author.id,
         genres: args.genres
       })
-      return await book.save()
+      return  await book.save()
     },
-    editAuthor: (root, args) =>{
-      if(!authors.find(a => a.name===args.name))
-        return null
-      else{
-        const inx=authors.findIndex(a => a.name===args.name)
-        authors[inx].born=args.setBornTo
-        return authors[inx]
-      }   
+    editAuthor: async (root, args) =>{
+      author= Author.find({name:args.name})
+      if (author.length===0) return null
+      let doc = await Author.findOneAndUpdate({name:args.name}, {born:args.setBornTo});
+      doc = await Author.findOne({name:args.name});
+      return doc   
     } 
   }
 }
