@@ -7,6 +7,7 @@ const Author = require('./models/Author')
 const { ApolloServer} = require('@apollo/server')
 const {gql} =require ('graphql-tag')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+const { GraphQLError } = require ('graphql')
 
 require('dotenv').config()
 
@@ -176,11 +177,6 @@ const resolvers = {
     name: (root) => root.name,
     bookCount: async (root) => {
       let author=await Author.find({name:root.name})
-      if (author.length===0){
-        author=new Author({name:root.name})
-        author=await author.save()
-      }
-      console.log(author)
       return (await Book.find({author:author._id})).length
     }
   },
@@ -189,15 +185,39 @@ const resolvers = {
       let author=await Author.find({name:args.author})
       if (author.length===0){
         author=new Author({name:args.author})
-        author=await author.save()
-      }
-      const book=new Book({
+        try {
+         await author.save()
+        } catch (error) {
+          throw new GraphQLError('Saving author failed', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.name,
+              error
+            }
+          })
+        }
+      } else
+        author=author[0]
+
+      let book=new Book({
         title: args.title,
         published: args.published,
-        author: author.id,
+        author: author._id,
         genres: args.genres
       })
-      return  await book.save()
+      try {
+        await book.save()
+      } catch (error) {
+        throw new GraphQLError('Saving book failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name,
+            error
+          }
+        })
+      }
+      book = await book.populate("author")
+      return book
     },
     editAuthor: async (root, args) =>{
       author= Author.find({name:args.name})
