@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const uniqueValidator = require('mongoose-unique-validator')
+// This requires mongoose@6.0.0
 
 const schema = new mongoose.Schema({
   name: {
