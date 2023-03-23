@@ -1,31 +1,13 @@
 import { useState } from 'react'
-import { gql, useQuery, useMutation } from '@apollo/client'
-
-const AUTHOR_AND_BOOK_COUNT = gql`
-  query {
-    allAuthors  {
-      name
-      born
-      bookCount 
-    }
-  }
-`
-
-const EDIT_AUTHOR = gql`
-mutation   editAuthorAge($name: String!, $setBornTo: Int!){
-  editAuthor(name:$name, setBornTo: $setBornTo){
-    name,
-    born
-  }
-} 
-`
-
+import { useQuery, useMutation } from '@apollo/client'
+import { AUTHOR_AND_BOOK_COUNT } from '../queries'
+import { EDIT_AUTHOR } from '../queries'
 
 const Authors = (props) => {
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
 
-  const result = useQuery(AUTHOR_AND_BOOK_COUNT)
+  const result = useQuery(AUTHOR_AND_BOOK_COUNT, {pollInterval: 2000})
   const [ editAuthor ] = useMutation(EDIT_AUTHOR)
 
   if (!props.show) {
@@ -37,9 +19,9 @@ const Authors = (props) => {
   }
 
   const authors = result.data.allAuthors
-  
+
   const submit = async (event) => {
-//    event.preventDefault()
+    event.preventDefault()
     if(name==='') setName(authors[0].name)
     editAuthor({ variables: { name, setBornTo: parseInt(born,10) } })
 
