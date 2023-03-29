@@ -128,6 +128,10 @@ type Token {
   value: String!
 }
 
+type Genre {
+  value: String!
+}
+
 type Author_ {
   name:String!,
   born: Int,
@@ -154,6 +158,7 @@ type Query {
   allBooks(author:String, genre:String): [Book!]!,
   allAuthors: [AuthorAndBookCount!]!,
   me: User
+  getFavoriteGenre(username:String!): Genre!
 }
 
 type Mutation {
@@ -196,6 +201,10 @@ const resolvers = {
                               }},
     allAuthors: async () => await Author.find({}),
     me: (root, args, context) => context.currentUser,
+    getFavoriteGenre: async (root, args) =>{
+      const user = await User.findOne({ username: args.username })
+      return {value:user.favoriteGenre}
+    },
   },
   AuthorAndBookCount:{
     name: (root) => root.name,

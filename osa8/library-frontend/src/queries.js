@@ -62,3 +62,9 @@ mutation addBook(
 
 }
 `
+
+export const GET_FAVORITE_GENRE = gql`
+query GetFavoriteGenre($username:String!) {
+  getFavoriteGenre(username:$username) {value}
+}
+`
