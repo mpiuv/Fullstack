@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 
 
 const Books = (props) => {
-  const [getLibraryByGenre, genreResult] = useLazyQuery(ALL_BOOKS_BY_GENRE)
+  const [getLibraryByGenre, genreResult] = useLazyQuery(ALL_BOOKS_BY_GENRE, {fetchPolicy: "no-cache" })
   const result = useQuery(ALL_BOOKS)
   const [selectedGenre, setSelectedGenre] = useState(null)
   const [books, setBooks] = useState([])
