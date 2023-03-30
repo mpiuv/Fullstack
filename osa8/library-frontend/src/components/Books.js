@@ -1,21 +1,34 @@
-import { useQuery } from '@apollo/client'
+import { useQuery, useLazyQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
-import { useState } from 'react'
+import { ALL_BOOKS_BY_GENRE } from '../queries'
+import { useState, useEffect } from 'react'
+
 
 const Books = (props) => {
-  const result = useQuery(ALL_BOOKS, {pollInterval: 2000})
+  const [getLibraryByGenre, genreResult] = useLazyQuery(ALL_BOOKS_BY_GENRE)
+  const result = useQuery(ALL_BOOKS)
   const [selectedGenre, setSelectedGenre] = useState(null)
+  const [books, setBooks] = useState([])
+
+  useEffect(() => {
+    if (result.data) setBooks(result.data.allBooks)
+  }, [result.data])
+
+  useEffect(() => {
+    if (genreResult.data) setBooks(genreResult.data.allBooks)
+  }, [genreResult.data])
+
   if (!props.show) {
     return null
   }
 
-  if (result.loading)  {
+  if (genreResult.loading || result.loading )  {
     return <div>loading...</div>
   }
 
-  const books = result.data.allBooks
+  const { allBooks } = result.data;
 
-  const genreSet=new Set(books.flatMap(b => b.genres))
+  const genreSet=new Set(allBooks.flatMap(b => b.genres))
 
   return (
     <div>
@@ -31,7 +44,6 @@ const Books = (props) => {
             <th>published</th>
           </tr>
           {books
-          .filter(b => (selectedGenre !== null ? b.genres.includes(selectedGenre) : b))
           .map(a => (
             <tr key={a.title}>
               <td>{a.title}</td>
@@ -44,11 +56,12 @@ const Books = (props) => {
       <div>
       <div>
         {[...genreSet].map((genre) => (
-          <button key={genre} onClick={() => setSelectedGenre(genre)}>
+          <button key={genre} onClick={() => {setSelectedGenre(genre)    
+            getLibraryByGenre({ variables: { genre: selectedGenre } })}}>
             {genre}
           </button>
         ))}
-        <button onClick={() => setSelectedGenre(null)}>all genres</button>
+        <button onClick={() => {setSelectedGenre("all genres");setBooks(allBooks)}}>all genres</button>
       </div>
 
       </div>
