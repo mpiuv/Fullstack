@@ -1,5 +1,17 @@
 const {gql} =require ('graphql-tag')
 
+const BOOK_DETAILS = gql`
+  fragment BookDetails on Book {
+    title
+    published
+    author {
+      name
+    }
+    genres
+    id
+  }
+`;
+
 export const AUTHOR_AND_BOOK_COUNT = gql`
   query {
     allAuthors  {
@@ -65,15 +77,15 @@ mutation addBook(
   author: $author,
   published: $published,
   genres: $genres
-){ id,
-  title,
-  published,
-  author{
-    name
-  },
-  genres}
-
-}
+){ ...BookDetails}
+} ${BOOK_DETAILS}
+`
+export const BOOK_ADDED = gql`
+  subscription BookAdded{
+    bookAdded {
+      ...BookDetails
+    }
+  } ${BOOK_DETAILS}
 `
 
 export const GET_FAVORITE_GENRE = gql`
