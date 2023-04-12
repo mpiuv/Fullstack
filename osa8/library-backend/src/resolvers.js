@@ -49,7 +49,10 @@ const resolvers = {
         if (author.length===0){
           author=new Author({name:args.author})
           try {
+          const newBook = new Book({ ...args, author: author._id })
+           author.books = author.books.concat(newBook._id)
            await author.save()
+           await newBook.save();
           } catch (error) {
             throw new GraphQLError('Saving author failed', {
               extensions: {
@@ -68,8 +71,10 @@ const resolvers = {
           author: author._id,
           genres: args.genres
         })
+        author.books = author.books.concat(book._id)
         try {
           await book.save()
+          await author.save()
         } catch (error) {
           throw new GraphQLError('Saving book failed', {
             extensions: {
