@@ -8,7 +8,7 @@ const pubsub = new PubSub()
 
 const resolvers = {
     Query: {
-      //bookCount: () => Book.collection.countDocuments(),
+      bookCount: () => Book.collection.countDocuments(),
       authorCount: () =>Author.collection.countDocuments() ,
       allBooks: async (root, args) => {
                                 if (args.author!==undefined) {
@@ -20,14 +20,7 @@ const resolvers = {
                                   const books=await Book.find({}).populate("author")
                                   return books
                                 }},
-      allAuthors: async () => {
-        const authors=await Author.find({})
-        const authorsMapped = authors.map((author) => {
-          return { name: author.name, born: author.born, bookCount: author.books.length, id: author._id
-          }
-        })
-        return authorsMapped;
-      },
+      allAuthors: async () => await Author.find({}),
       me: (root, args, context) => context.currentUser,
       getFavoriteGenre: async (root, args) =>{
         const user = await User.findOne({ username: args.username })
