@@ -26,10 +26,10 @@ const calculateExercises = (daily_exercise_hours:number[],target_amount:number):
   }
 
 }
-const arguments:number= process.argv.length
+const _arguments:number= process.argv.length
 const target:number=Number(process.argv[2])
 let exerciseHours:number[]=[]
-for (let i = 3; i < arguments; i++){
+for (let i = 3; i < _arguments; i++){
   exerciseHours=exerciseHours.concat(Number(process.argv[i]))  
 }
 console.log(JSON.stringify(calculateExercises(exerciseHours,target)))
