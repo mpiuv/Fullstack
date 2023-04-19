@@ -7,7 +7,7 @@ interface Result { periodLength: number,
     average: number 
 }
    
-const calculateExercises = (daily_exercise_hours:number[],target_amount:number): Result => {
+export const calculateExercises = (daily_exercise_hours:number[],target_amount:number): Result => {
     const periodLength: number=daily_exercise_hours.length;
     const trainingDays: number=daily_exercise_hours.length-daily_exercise_hours.filter(day=> day===0).length;
     const target: number=target_amount;
@@ -26,10 +26,10 @@ const calculateExercises = (daily_exercise_hours:number[],target_amount:number):
   };
 
 };
-const _arguments:number= process.argv.length;
-const target=Number(process.argv[2]);
-let exerciseHours:number[]=[];
-for (let i = 3; i < _arguments; i++){
-  exerciseHours=exerciseHours.concat(Number(process.argv[i]));
-}
-console.log(JSON.stringify(calculateExercises(exerciseHours,target)));
+//const _arguments:number= process.argv.length;
+//const target=Number(process.argv[2]);
+//let exerciseHours:number[]=[];
+//for (let i = 3; i < _arguments; i++){
+//  exerciseHours=exerciseHours.concat(Number(process.argv[i]));
+//}
+//console.log(JSON.stringify(calculateExercises(exerciseHours,target)));
