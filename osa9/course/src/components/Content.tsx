@@ -1,19 +1,12 @@
+import Part from "./Part"
+import CoursePart from "../types"
 interface ContentProps {
-    courseParts: { exerciseCount: number, name: string }[];
+    courseParts: CoursePart[];
   }
   
   const Content = (props: ContentProps): JSX.Element => {
-    return      <div>
-      <p>
-      {props.courseParts[0].name} {props.courseParts[0].exerciseCount}
-      </p>
-      <p>
-      {props.courseParts[1].name} {props.courseParts[1].exerciseCount}
-      </p>
-      <p>
-      {props.courseParts[2].name} {props.courseParts[2].exerciseCount}
-      </p></div>
-;
+     
+    return      <div>{props.courseParts.map(part => <Part part={part} key={part.toString()}/>) as unknown as JSX.Element[]}</div>;
   };
   
   export default Content;
