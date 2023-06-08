@@ -6,14 +6,51 @@ import axios from 'axios';
 
 function App() {
   const [diaries, setDiaries] = useState<NonSensitiveDiaryEntry[]>([]);
+  const [newDate, setNewDate] = useState<string>('');
+  const [newVisibility, setNewVisibility] = useState<string>('');
+  const [newWeather, setNewWeather] = useState<string>('');
+  const [newComment, setNewComment] = useState<string>('');
   useEffect(() => {
-    axios.get<NonSensitiveDiaryEntry[]>('http://localhost:3000/api/diaries').then(response => {
+    axios.get<NonSensitiveDiaryEntry[]>('http://localhost:3001/api/diaries').then(response => {
       setDiaries(response.data)
     })
   }, []);
 
+  const addNewDiaryEntry = (event: React.SyntheticEvent) => {
+    event.preventDefault()
+    axios.post<NonSensitiveDiaryEntry>('http://localhost:3001/api/diaries', 
+     { date: newDate, visibility: newVisibility, weather: newWeather, comment: newComment })
+    .then(response => {
+      setDiaries(diaries.concat({date:response.data.date,visibility:response.data.visibility,weather:response.data.weather, id:response.data.id} ))
+    }) 
+  }
+
+  const handleDateChange = (event: React.SyntheticEvent) => {
+    setNewDate((event.target as HTMLInputElement).value)
+  }
+
+  const handleVisibilityChange = (event: React.SyntheticEvent) => {
+    setNewVisibility((event.target as HTMLInputElement).value)
+  }
+  const handleWeatherChange = (event: React.SyntheticEvent) => {
+    setNewWeather((event.target as HTMLInputElement).value)
+  }
+
+  const handleCommentChange = (event: React.SyntheticEvent) => {
+    setNewComment((event.target as HTMLInputElement).value)
+  }
+
   return (
     <div >
+      <h1>Add new entry</h1>
+      <form onSubmit={addNewDiaryEntry}>
+        date:<input value={newDate} onChange={handleDateChange}/> <br></br>
+        visibility:<input value={newVisibility} onChange={handleVisibilityChange}/><br></br>
+        weather:<input value={newWeather} onChange={handleWeatherChange}/><br></br>
+        comment:<input value={newComment} onChange={handleCommentChange}/><br></br>
+        <button type="submit">add</button>
+      </form>   
+
       <h1>Diary entries</h1>
       {diaries.map(entry =><div>
         <p><strong>{entry.date}</strong></p>
