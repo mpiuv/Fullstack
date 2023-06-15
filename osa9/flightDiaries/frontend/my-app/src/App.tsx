@@ -3,14 +3,9 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import { NonSensitiveDiaryEntry } from './types';
 import axios from 'axios';
-import { stringify } from 'querystring';
 
 function App():JSX.Element{
   const [diaries, setDiaries] = useState<NonSensitiveDiaryEntry[]>([]);
-  const [newDate, setNewDate] = useState<string>('');
-  const [newVisibility, setNewVisibility] = useState<string>('');
-  const [newWeather, setNewWeather] = useState<string>('');
-  const [newComment, setNewComment] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
@@ -24,34 +19,21 @@ function App():JSX.Element{
     errors: Record<string, string[]>
   }
 
-  const addNewDiaryEntry = (event: React.SyntheticEvent) => {
+  const addNewDiaryEntry = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     axios.post<NonSensitiveDiaryEntry>('http://localhost:3001/api/diaries', 
-     { date: newDate, visibility: newVisibility, weather: newWeather, comment: newComment })
+     { date: event.currentTarget.date.value , 
+       visibility: event.currentTarget.visibility.value, 
+       weather: event.currentTarget.weather.value, 
+       comment: event.currentTarget.comment.value })
     .then(response => {
       setDiaries(diaries.concat({date:response.data.date,visibility:response.data.visibility,weather:response.data.weather, id:response.data.id} ))
       setErrorMessage('')
     })
     .catch(error => { if (axios.isAxiosError<ValidationError, Record<string, unknown>>(error)) {
       setErrorMessage(JSON.stringify(error.response?.data))
-   
   }})
 }
-
-  const handleDateChange = (event: React.SyntheticEvent) => {
-    setNewDate((event.target as HTMLInputElement).value)
-  }
-
-  const handleVisibilityChange = (event: React.SyntheticEvent) => {
-    setNewVisibility((event.target as HTMLInputElement).value)
-  }
-  const handleWeatherChange = (event: React.SyntheticEvent) => {
-    setNewWeather((event.target as HTMLInputElement).value)
-  }
-
-  const handleCommentChange = (event: React.SyntheticEvent) => {
-    setNewComment((event.target as HTMLInputElement).value)
-  }
 
   type NotificationProps = {
     message: string
@@ -74,11 +56,40 @@ function App():JSX.Element{
       <h1>Add new entry</h1>
       <Notification  message={ errorMessage }/>
       <form onSubmit={addNewDiaryEntry}>
-        date:<input value={newDate} onChange={handleDateChange}/> <br></br>
-        visibility:<input value={newVisibility} onChange={handleVisibilityChange}/><br></br>
-        weather:<input value={newWeather} onChange={handleWeatherChange}/><br></br>
-        comment:<input value={newComment} onChange={handleCommentChange}/><br></br>
-        <button type="submit">add</button>
+      <label htmlFor='date'>date:</label>
+      <input name='date' id='date' type='date' />
+      <br></br>
+      <fieldset>
+          <legend>Visibility:</legend>
+          <input type='radio' id='great' name='visibility' value='great' />
+          <label htmlFor='great'>great</label>
+          <input type='radio' id='good' name='visibility' value='good'/>
+          <label htmlFor='good'>good</label>
+          <input type='radio' id='ok' name='visibility' value='ok' defaultChecked/>
+          <label htmlFor='ok'>OK</label>
+          <input type='radio' id='poor' name='visibility' value='poor'/>
+          <label htmlFor='poor'>poor</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Weather:</legend>
+          <input type='radio' id='sunny' name='weather' value='sunny' />
+          <label htmlFor='sunny'>sunny</label>
+          <input type='radio' id='rainy' name='weather' value='rainy' defaultChecked/>
+          <label htmlFor='rainy'>rainy</label>
+          <input type='radio' id='cloudy' name='weather' value='cloudy'/>
+          <label htmlFor='cloudy'>cloudy</label>
+          <input type='radio' id='stormy' name='weather' value='stormy'/>
+          <label htmlFor='stormy'>stormy</label>
+          <input type='radio' id='windy' name='weather' value='windy'/>
+          <label htmlFor='windy'>windy</label>
+        </fieldset>
+
+        <div>
+          <label htmlFor='comment'>Comment</label>
+          <input name='comment' id='comment' type='text' />
+        </div>
+        <button type='submit'>Add</button>
       </form>   
 
       <h1>Diary entries</h1>
