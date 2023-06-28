@@ -10,15 +10,14 @@ router.get("/", (_req, res) => {
 });
 
 router.get("/:id", (req, res) => {
-  const pe:NonSensitivePatientEntry|undefined=patientService.getPatientEntry(req.params.id)
+  const pe:NonSensitivePatientEntry|undefined=patientService.getPatientEntry(req.params.id);
   if(pe===undefined)
-     res.status(400).send("Error:No such id")
+     res.status(400).send("Error:No such id");
   else 
     res.send(pe);
 });
 
 router.post("/",(req, res) => {
-  const { name, dateOfBirth, ssn, gender, occupation } = req.body;
   const newPatient = toNewPatient(req.body);
   try {
     const addedEntry = patientService.addPatient(newPatient);
@@ -30,6 +29,6 @@ router.post("/",(req, res) => {
     }
     res.status(400).send(errorMessage);
   }
-})
+});
 
 export default router;
