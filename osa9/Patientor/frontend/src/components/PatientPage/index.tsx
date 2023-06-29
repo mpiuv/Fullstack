@@ -1,3 +1,4 @@
+import React  from 'react';
 import {
     useParams
   } from 'react-router-dom'
@@ -17,6 +18,22 @@ export const PatientPage = ({ patients }:patientPage) => {
       <div>gender:{patient.gender}</div>
       <div>ssn:{patient.ssn===undefined?null:patient.ssn}</div>
       <div>dateOfBirth:{patient.dateOfBirth===undefined?null:patient.dateOfBirth}</div>
+      <h1>entries</h1>
+      <ul>
+        {patient.entries.map(entry => 
+          <li key={entry.id}>
+            {entry.date} {entry.description} <br></br>
+            <ul>
+              {entry.diagnosisCodes?.map(diag =>
+              <li>
+                {diag}
+              </li>
+                )}
+            </ul>
+          </li>
+        )}
+      </ul>
+ 
     </div>
   )
 }
