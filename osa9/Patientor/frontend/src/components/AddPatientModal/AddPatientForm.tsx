@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component} from "react";
 import { useState, SyntheticEvent } from "react";
 
 import {  TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent } from '@mui/material';
@@ -19,7 +19,7 @@ const genderOptions: GenderOption[] = Object.values(Gender).map(v => ({
   value: v, label: v.toString()
 }));
 
-const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
+const AddPatientForm = ({ onCancel, onSubmit }: Props):JSX.Element => {
   const [name, setName] = useState('');
   const [occupation, setOccupation] = useState('');
   const [ssn, setSsn] = useState('');

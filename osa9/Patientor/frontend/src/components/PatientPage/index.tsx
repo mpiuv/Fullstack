@@ -3,16 +3,7 @@ import {
     useParams
   } from 'react-router-dom'
 import { Patient, Diagnosis } from '../../types'
-
-interface entryDetail {
-  diag: string;
-  diagnoses: Diagnosis[];
-}
-
-const EntryDetail = ({diag, diagnoses}:entryDetail) =>{
-  const inx:number=diagnoses.findIndex((element)=> element.code===diag);
-  return (<div>{diag} {diagnoses[inx].name}</div>)
-}
+import { EntryDetail } from './EntryDetail';
 
 interface patientPage {
   patients: Patient[];
@@ -32,17 +23,8 @@ export const PatientPage = ({ patients, diagnoses }:patientPage) => {
       <h1>entries</h1>
       <ul>
         {patient.entries.map(entry => 
-          <li key={entry.id}>
-            {entry.date} {entry.description} <br></br>
-            <ul>
-              {entry.diagnosisCodes?.map(diag =>
-              <li key={diag}>
-                <EntryDetail diag={diag} diagnoses={diagnoses}/>
-              </li>
-                )}
-            </ul>
-          </li>
-        )}
+          // eslint-disable-next-line react/jsx-key
+          <EntryDetail entry={entry}/>)}
       </ul>
  
     </div>

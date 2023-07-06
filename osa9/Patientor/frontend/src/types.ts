@@ -22,7 +22,7 @@ export interface Patient {
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
 
-interface BaseEntry {
+export interface BaseEntry {
   id: string;
   description: string;
   date: string;
@@ -37,21 +37,21 @@ export enum HealthCheckRating {
   "CriticalRisk" = 3
 }
 
-interface HealthCheckEntry extends BaseEntry {
+export interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck";
   healthCheckRating: HealthCheckRating;
 }
 
-interface HospitalInterface {date:string, criteria: string}
+export interface HospitalInterface {date:string, criteria: string}
 
-interface HospitalEntry extends BaseEntry{
+export interface HospitalEntry extends BaseEntry{
   type: "Hospital";
   discharge: HospitalInterface
 }
 
-interface OccupationalHealthcareInterface {startDate:string, endDate:string}
+export interface OccupationalHealthcareInterface {startDate:string, endDate:string}
 
-interface OccupationalHealthcareEntry extends BaseEntry{
+export interface OccupationalHealthcareEntry extends BaseEntry{
   type: "OccupationalHealthcare";
   sickLeave?: OccupationalHealthcareInterface;
   employerName?: string
