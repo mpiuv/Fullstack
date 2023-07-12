@@ -1,5 +1,5 @@
-import {Diagnose}  from "../src/types";
-export const data:Diagnose[] = [
+import {Diagnosis}  from "../src/types";
+export const data:Diagnosis[] = [
   {
     "code": "M24.2",
     "name": "Disorder of ligament",

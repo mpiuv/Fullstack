@@ -1,4 +1,5 @@
-import { NewPatientEntry, Gender } from './types';
+import { NewPatientEntry, Gender, HealthCheckEntry, HospitalEntry, OccupationalHealthcareEntry, Diagnosis, HealthCheckRating, 
+  NewHealthCheckEntry, NewHospitalEntry, NewOccupationalHealthcareEntry } from './types';
 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -27,7 +28,7 @@ const parseGender = (gender: Gender): Gender => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument 
-const toNewPatient = (obj:any): NewPatientEntry => {
+export const toNewPatient = (obj:any): NewPatientEntry => {
   if(!obj.name || !isString(obj.name)) throw('Name not defined');
   if(!obj.dateOfBirth|| !isString(obj.dateOfBirth)) throw('Date of birth not defined');
   if(!obj.ssn|| !isString(obj.ssn)) throw ('Ssn not defined');
@@ -48,4 +49,60 @@ const toNewPatient = (obj:any): NewPatientEntry => {
   return newEntry;
 };
 
-export default toNewPatient;
+export const toHealthCheckEntry = (obj:any,diag:Array<Diagnosis['code']>): NewHealthCheckEntry =>{
+  if(!obj.description || !isString(obj.description)) throw('Description not defined');
+  if(!obj.date || !isString(obj.date)) throw('Date not defined');
+  if(!obj.specialist || !isString(obj.specialist)) throw('Specialist not defined');
+
+  if(obj.healthCheckRating===undefined ) throw('Health check rating not defined');
+
+  const newEntry: NewHealthCheckEntry = {
+    type: obj.type,
+    description: obj.description,
+    date: parseDate(obj.date),
+    specialist: obj.specialist,
+    diagnosisCodes: diag,
+    healthCheckRating: obj.healthCheckRating,
+  };
+  return newEntry;
+}
+
+export const toHospitalEntry = (obj:any,diag:Array<Diagnosis['code']>): NewHospitalEntry => {
+  if(!obj.description || !isString(obj.description)) throw('Description not defined');
+  if(!obj.date || !isString(obj.date)) throw('Date not defined');
+  if(!obj.specialist || !isString(obj.specialist)) throw('Specialist not defined');
+
+  if(!obj.discharge) throw('Discharge not defined');
+  if(!obj.discharge.date || !isString(obj.discharge.date) ) throw ('Invalid discharge date');
+  if(!obj.discharge.criteria || !isString(obj.discharge.criteria) ) throw ('Invalid or missing discharge criteria');
+
+  const newEntry: NewHospitalEntry = {
+    type: obj.type,
+    description: obj.description,
+    date: parseDate(obj.date),
+    specialist: obj.specialist,
+    diagnosisCodes: diag,
+    discharge: obj.discharge,
+  };
+  return newEntry;
+}
+
+export const toOccupationalHealthcareEntry = (obj:any,diag:Array<Diagnosis['code']>) : NewOccupationalHealthcareEntry => {
+  if(!obj.description || !isString(obj.description)) throw('Description not defined');
+  if(!obj.date || !isString(obj.date)) throw('Date not defined');
+  if(!obj.specialist || !isString(obj.specialist)) throw('Specialist not defined');
+
+  if (!obj.employerName===undefined || !isString(obj.employerName)) throw ('Employer name not a string');
+  if (!obj.sickLeave===undefined || !isString(obj.startDate) || !isString(obj.endDate)) throw ('Sick leave date problem');
+
+  const newEntry: NewOccupationalHealthcareEntry = {
+    type: obj.type,
+    description: obj.description,
+    date: parseDate(obj.date),
+    specialist: obj.specialist,
+    diagnosisCodes: diag,
+  };
+  return newEntry;
+}
+
+export default {toNewPatient, toHealthCheckEntry,toHospitalEntry,toOccupationalHealthcareEntry};

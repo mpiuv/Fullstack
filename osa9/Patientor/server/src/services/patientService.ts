@@ -1,5 +1,6 @@
 import patientData from '../../data/better-patients';
-import { Patient,NonSensitivePatientEntry, NewPatientEntry } from '../types';
+import { Patient,NonSensitivePatientEntry, NewPatientEntry, HealthCheckEntry, HospitalEntry, OccupationalHealthcareEntry,
+NewHealthCheckEntry, NewHospitalEntry, NewOccupationalHealthcareEntry } from '../types';
 import { v1 as uuid } from 'uuid';
 
 const getEntries = () :NonSensitivePatientEntry [] => {
@@ -24,6 +25,30 @@ const addPatient=(entry:NewPatientEntry):Patient => {
   return newPatientEntry;
 };
 
+const addHealthCheckEntry=(patientId:string,entry:NewHealthCheckEntry):HealthCheckEntry => {
+  const newHealthCheckEntry:HealthCheckEntry = {id:uuid(),...entry};
+  
+  patientData.find(e => e.id===patientId)?.entries.push(newHealthCheckEntry);
+
+  return newHealthCheckEntry
+}
+
+const addHospitalEntry=(patientId:string,entry:NewHospitalEntry):HospitalEntry => {
+  const newHospitalEntry:HospitalEntry = {id:uuid(),...entry};
+  
+  patientData.find(e => e.id===patientId)?.entries.push(newHospitalEntry);
+
+  return newHospitalEntry
+}
+
+const addOccupationalHealthcareEntry=(patientId:string,entry:NewOccupationalHealthcareEntry):OccupationalHealthcareEntry => {
+  const newOccupationalHealthcareEntry:OccupationalHealthcareEntry = {id:uuid(),...entry};
+  
+  patientData.find(e => e.id===patientId)?.entries.push(newOccupationalHealthcareEntry);
+
+  return newOccupationalHealthcareEntry
+}
+
 export default {
-  getEntries, addPatient, getPatientEntry
+  getEntries, addPatient, getPatientEntry, addHealthCheckEntry, addHospitalEntry, addOccupationalHealthcareEntry
 };
