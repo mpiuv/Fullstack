@@ -47,14 +47,17 @@ router.post("/:id/entries",(req, res) => {
     return res.status(400).send("Entry type is undefined");
   }
 
-  switch (obj.type){
-    case 'HealthCheck': res.json(patientService.addHealthCheckEntry(req.params.id,toHealthCheckEntry(obj,parseDiagnosisCodes(obj)))); return; 
-    case 'Hospital': res.json(patientService.addHospitalEntry(req.params.id,toHospitalEntry(obj,parseDiagnosisCodes(obj)))); return; 
-    case 'OccupationalHealthcare': 
-      res.json(patientService.addOccupationalHealthcareEntry(req.params.id,toOccupationalHealthcareEntry(obj,parseDiagnosisCodes(obj)))); return; 
-    default: assertNever(obj.type as never);
+  try {
+    switch (obj.type){
+      case 'HealthCheck': res.json(patientService.addHealthCheckEntry(req.params.id,toHealthCheckEntry(obj,parseDiagnosisCodes(obj)))); return; 
+      case 'Hospital': res.json(patientService.addHospitalEntry(req.params.id,toHospitalEntry(obj,parseDiagnosisCodes(obj)))); return; 
+      case 'OccupationalHealthcare': 
+        res.json(patientService.addOccupationalHealthcareEntry(req.params.id,toOccupationalHealthcareEntry(obj,parseDiagnosisCodes(obj)))); return; 
+      default: assertNever(obj.type as never);
+    }
+  } catch (e:unknown) {
+    return res.status(400).send(e)
   }
-
 });
 
 export default router;

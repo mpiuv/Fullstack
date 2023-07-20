@@ -42,6 +42,15 @@ export interface HealthCheckEntry extends BaseEntry {
   healthCheckRating: HealthCheckRating;
 }
 
+export interface HealthCheckFormValues {
+  description:string,
+  date:string,
+  specialist:string,
+  healthCheckRating:number,
+  diagnosisCodes:string[]
+}
+
+
 export interface HospitalInterface {date:string, criteria: string}
 
 export interface HospitalEntry extends BaseEntry{

@@ -7,7 +7,19 @@ import WorkIcon from '@mui/icons-material/Work';
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 import { Entry, HealthCheckEntry, Diagnosis, HospitalEntry, OccupationalHealthcareEntry, HealthCheckRating } from '../../types';
 
-export const HealthCheckDetails=({entry}:{ entry:HealthCheckEntry})=>{
+export const HealthCheckDetails=({entry,diagnoses}:{ entry:HealthCheckEntry,diagnoses:Diagnosis[]})=>{
+
+  interface entryDetail {
+    diag: string;
+    diagnoses: Diagnosis[];
+  }
+  
+  const EntryDetail = ({diag, diagnoses}:entryDetail) =>{
+    const inx:number=diagnoses.findIndex((element)=> element.code===diag);
+    if (inx===-1) console.log("Couldn't find diag code:"+diag)
+    return (<div>{diag} {diagnoses[inx].name}</div>)
+  }
+
   const getHealthColor = (rating: HealthCheckRating) => {
   const green = '#66b031';
   const yellow = '#fefe32';
@@ -31,6 +43,13 @@ export const HealthCheckDetails=({entry}:{ entry:HealthCheckEntry})=>{
          <Typography>{entry.description}</Typography>
          <FavoriteIcon style={{ color: healthColor }}/>
           Diagnosed by {entry.specialist}
+          <ul>
+            {entry.diagnosisCodes?.map(diag =>
+            <li key={diag}>
+              <EntryDetail diag={diag} diagnoses={diagnoses}/>
+            </li>
+              )}
+          </ul>
       </CardContent>
     </Card>
   );
@@ -61,10 +80,10 @@ export const OccupationalHealthcareDetails = ({entry}:{ entry:OccupationalHealth
   )
 }
 
-export const EntryDetail = ({entry}:{ entry:Entry}) =>{
+export const EntryDetail = ({entry,diagnoses}:{ entry:Entry,diagnoses:Diagnosis[]}) =>{
   switch (entry.type) {
     case "HealthCheck":
-      return <HealthCheckDetails entry={entry as HealthCheckEntry} />
+      return <HealthCheckDetails entry={entry as HealthCheckEntry} diagnoses = {diagnoses}/>
     case "Hospital":
       return <HospitalDetails entry={entry as HospitalEntry} />
     case "OccupationalHealthcare":
@@ -73,14 +92,3 @@ export const EntryDetail = ({entry}:{ entry:Entry}) =>{
       return assertNever((entry as Entry).type as never);
   }
 }
-
-interface entryDetail {
-    diag: string;
-    diagnoses: Diagnosis[];
-  }
-
-export const EntryDetail0 = ({diag, diagnoses}:entryDetail) =>{
-    const inx:number=diagnoses.findIndex((element)=> element.code===diag);
-    return (<div>{diag} {diagnoses[inx].name}</div>)
-  }
-

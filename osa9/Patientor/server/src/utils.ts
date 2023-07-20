@@ -55,6 +55,7 @@ export const toHealthCheckEntry = (obj:any,diag:Array<Diagnosis['code']>): NewHe
   if(!obj.specialist || !isString(obj.specialist)) throw('Specialist not defined');
 
   if(obj.healthCheckRating===undefined ) throw('Health check rating not defined');
+  if(obj.healthCheckRating<0 || obj.healthCheckRating>3 ) throw('Value of healthCheckRating incorrect:'+String(obj.healthCheckRating));
 
   const newEntry: NewHealthCheckEntry = {
     type: obj.type,
