@@ -93,8 +93,8 @@ export const toOccupationalHealthcareEntry = (obj:any,diag:Array<Diagnosis['code
   if(!obj.date || !isString(obj.date)) throw('Date not defined');
   if(!obj.specialist || !isString(obj.specialist)) throw('Specialist not defined');
 
-  if (!obj.employerName===undefined || !isString(obj.employerName)) throw ('Employer name not a string');
-  if (!obj.sickLeave===undefined || !isString(obj.startDate) || !isString(obj.endDate)) throw ('Sick leave date problem');
+  if (!obj.employerName===undefined && !isString(obj.employerName)) throw ('Employer name not a string');
+  if (!obj.sickLeave===undefined && (!isString(obj.startDate) || !isString(obj.endDate))) { throw ('Sick leave date problem');}
 
   const newEntry: NewOccupationalHealthcareEntry = {
     type: obj.type,
@@ -103,6 +103,9 @@ export const toOccupationalHealthcareEntry = (obj:any,diag:Array<Diagnosis['code
     specialist: obj.specialist,
     diagnosisCodes: diag,
   };
+  if (obj.employerName!==undefined) newEntry.employerName=obj.employerName;
+  if (obj.sickLeave!==undefined) newEntry.sickLeave=obj.sickLeave;
+
   return newEntry;
 }
 

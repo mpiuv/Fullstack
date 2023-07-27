@@ -2,7 +2,7 @@ import React  from 'react';
 import {
     useParams
   } from 'react-router-dom'
-import { Patient, Diagnosis, HealthCheckFormValues, HealthCheckEntry } from '../../types'
+import { Patient, Diagnosis, HealthCheckFormValues, HealthCheckEntry, HospitalFormValues, HospitalEntry, OccupationalHealthcareFormValues, OccupationalHealthcareEntry } from '../../types'
 import { EntryDetail } from './EntryDetail';
 import { AddEntryForm } from './AddEntryForm'
 import { useState } from 'react';
@@ -29,6 +29,50 @@ export const PatientPage = ({ patients, diagnoses, setPatients }:patientPage) =>
   const submitNewHealthCheck = async (values: HealthCheckFormValues) => {
     try {
       const hse:HealthCheckEntry = await patientService.createHealthCheck(id as string,values);
+      patient.entries.push(hse);
+      setPatients(patients);
+      forceRerender({});
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        if (e?.response?.data && typeof e?.response?.data === "string") {
+          const message = e.response.data.replace('Something went wrong. Error: ', '');
+          console.error(message);
+          setError(message);
+        } else {
+          setError("Unrecognized axios error");
+        }
+      } else {
+        console.error("Unknown error", e);
+        setError("Unknown error");
+      }
+    }
+  };
+
+  const submitNewHospital = async (values: HospitalFormValues) => {
+    try {
+      const hse:HospitalEntry = await patientService.createHospital(id as string,values);
+      patient.entries.push(hse);
+      setPatients(patients);
+      forceRerender({});
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        if (e?.response?.data && typeof e?.response?.data === "string") {
+          const message = e.response.data.replace('Something went wrong. Error: ', '');
+          console.error(message);
+          setError(message);
+        } else {
+          setError("Unrecognized axios error");
+        }
+      } else {
+        console.error("Unknown error", e);
+        setError("Unknown error");
+      }
+    }
+  };
+
+  const submitNewOccupationalHealthcare = async (values: OccupationalHealthcareFormValues) => {
+    try {
+      const hse:OccupationalHealthcareEntry = await patientService.createOccupationalHealthcare(id as string,values);
       patient.entries.push(hse);
       setPatients(patients);
       forceRerender({});
@@ -76,7 +120,8 @@ export const PatientPage = ({ patients, diagnoses, setPatients }:patientPage) =>
       <div>ssn:{patient.ssn===undefined?null:patient.ssn}</div>
       <div>date of birth:{patient.dateOfBirth===undefined?null:patient.dateOfBirth}</div>
       <Notification message={error} />
-      <AddEntryForm onCancel={close} onSubmit={submitNewHealthCheck}/>
+      <AddEntryForm onCancel={close} onSubmitHealthCheck={submitNewHealthCheck} 
+        onSubmitHospital={submitNewHospital} onSubmitOccupationalHealthcare={submitNewOccupationalHealthcare}/>
       <br></br>
       <br></br>
       <h1>entries</h1>
