@@ -1,7 +1,7 @@
 import React, {Component, SyntheticEvent} from  'react';
 import { useState } from 'react';
-import { TextField, Grid, Button, Tabs } from '@mui/material';
-import { HealthCheckFormValues, HospitalFormValues, OccupationalHealthcareFormValues } from '../../types';
+import { TextField, Grid, Button, Tabs, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Diagnosis, HealthCheckFormValues, HospitalFormValues, OccupationalHealthcareFormValues } from '../../types';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -39,11 +39,12 @@ function a11yProps(index: number) {
   };
 }
 
-export const AddEntryForm = ({ onCancel, onSubmitHealthCheck, onSubmitHospital, onSubmitOccupationalHealthcare }:
+export const AddEntryForm = ({ onCancel, onSubmitHealthCheck, onSubmitHospital, onSubmitOccupationalHealthcare, diagnoses }:
     {onCancel: () => void; 
     onSubmitHealthCheck: (values: HealthCheckFormValues) => void;
     onSubmitHospital: (values:HospitalFormValues) => void;
     onSubmitOccupationalHealthcare: (values:OccupationalHealthcareFormValues) =>void;
+    diagnoses:Diagnosis[];
   }):JSX.Element => {
   const [description, setDescription] = useState<string>('');
   const [date, setDate] = useState<string>('');
@@ -120,10 +121,13 @@ return (
       />
       <TextField
         label="Date"
-        placeholder="YYYY-MM-DD"
+        type="date"
         fullWidth
         value={date}
         onChange={({ target }) => setDate(target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
       />
       <TextField
         label="Specialist"
@@ -131,18 +135,37 @@ return (
         value={specialist}
         onChange={({ target }) => setSpecialist(target.value)}
       />
-      <TextField
-        label="Health check rating"
-        fullWidth
-        value={healthCheckRating}
-        onChange={({ target }) => setHealthCheckRating(Number(target.value))}
-      />
-      <TextField
-        label="Diagnosis codes"
-        fullWidth
-        value={diagnosisCodes}
-        onChange={({ target }) => setDiagnosisCodes(target.value.split(","))}
-      />
+      <FormControl fullWidth>
+        <InputLabel id="simple-select-label">Health check rating</InputLabel>
+        <Select
+          labelId="simple-select-label"
+          id="simple-select"
+          value={healthCheckRating}
+          label="Health check rating"
+          onChange={({ target }) => setHealthCheckRating(Number(target.value))}
+       >
+          <MenuItem value={0}>Healthy</MenuItem>
+          <MenuItem value={1}>Low risk</MenuItem>
+          <MenuItem value={2}>High risk</MenuItem>
+          <MenuItem value={3}>Critical risk</MenuItem>
+        </Select>
+      </FormControl>
+
+      <FormControl fullWidth>
+        <InputLabel id="simple-select-label">Diagnosis codes</InputLabel>
+        <Select
+          labelId="simple-select-label"
+          id="simple-select"
+          value={diagnosisCodes}
+          multiple
+          label="Diagnonsis codes"
+          onChange={({ target }) => setDiagnosisCodes(target.value as string[])}
+       >
+         {diagnoses.map((name) => (
+              <MenuItem value={name.code} key={name.code}>{name.code}</MenuItem>
+            ))}
+        </Select>
+      </FormControl>
 
       <Grid>
         <Grid item>
@@ -183,10 +206,13 @@ return (
       />
       <TextField
         label="Date"
-        placeholder="YYYY-MM-DD"
         fullWidth
+        type="date"
         value={date}
         onChange={({ target }) => setDate(target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
       />
       <TextField
         label="Specialist"
@@ -194,18 +220,31 @@ return (
         value={specialist}
         onChange={({ target }) => setSpecialist(target.value)}
       />
-      <TextField
-        label="Diagnosis codes"
-        fullWidth
-        value={diagnosisCodes}
-        onChange={({ target }) => setDiagnosisCodes(target.value.split(","))}
-      />
+      <FormControl fullWidth>
+        <InputLabel id="simple-select-label">Diagnosis codes</InputLabel>
+        <Select
+          labelId="simple-select-label"
+          id="simple-select"
+          value={diagnosisCodes}
+          multiple
+          label="Diagnonsis codes"
+          onChange={({ target }) => setDiagnosisCodes(target.value as string[])}
+       >
+         {diagnoses.map((name) => (
+              <MenuItem value={name.code} key={name.code}>{name.code}</MenuItem>
+            ))}
+        </Select>
+      </FormControl>
+
       <TextField
         label="Discharge date"
-        placeholder="YYYY-MM-DD"
+        type="date"
         fullWidth
         value={dischargeDate}
         onChange={({ target }) => setDischargeDate(target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
       />
       <TextField
         label="Discharge criteria"
@@ -252,10 +291,13 @@ return (
       />
       <TextField
         label="Date"
-        placeholder="YYYY-MM-DD"
+        type="date"
         fullWidth
         value={date}
         onChange={({ target }) => setDate(target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
       />
       <TextField
         label="Specialist"
@@ -263,25 +305,40 @@ return (
         value={specialist}
         onChange={({ target }) => setSpecialist(target.value)}
       />
-      <TextField
-        label="Diagnosis codes"
-        fullWidth
-        value={diagnosisCodes}
-        onChange={({ target }) => setDiagnosisCodes(target.value.split(","))}
-      />
+      <FormControl fullWidth>
+        <InputLabel id="simple-select-label">Diagnosis codes</InputLabel>
+        <Select
+          labelId="simple-select-label"
+          id="simple-select"
+          value={diagnosisCodes}
+          multiple
+          label="Diagnonsis codes"
+          onChange={({ target }) => setDiagnosisCodes(target.value as string[])}
+       >
+         {diagnoses.map((name) => (
+              <MenuItem value={name.code} key={name.code}>{name.code}</MenuItem>
+            ))}
+        </Select>
+      </FormControl>
       <TextField
         label="Sickleave start date"
-        placeholder="YYYY-MM-DD"
+        type="date"
         fullWidth
         value={sickleaveStartDate}
         onChange={({ target }) => setSickleaveStartDate(target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
       />
       <TextField
         label="Sickleave end date"
-        placeholder="YYYY-MM-DD"
+        type="date"
         fullWidth
         value={sickleaveEndDate}
         onChange={({ target }) => setSickleaveEndDate(target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
       />
       <TextField
         label="Employer"

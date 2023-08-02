@@ -121,7 +121,8 @@ export const PatientPage = ({ patients, diagnoses, setPatients }:patientPage) =>
       <div>date of birth:{patient.dateOfBirth===undefined?null:patient.dateOfBirth}</div>
       <Notification message={error} />
       <AddEntryForm onCancel={close} onSubmitHealthCheck={submitNewHealthCheck} 
-        onSubmitHospital={submitNewHospital} onSubmitOccupationalHealthcare={submitNewOccupationalHealthcare}/>
+        onSubmitHospital={submitNewHospital} onSubmitOccupationalHealthcare={submitNewOccupationalHealthcare}
+        diagnoses={diagnoses}/>
       <br></br>
       <br></br>
       <h1>entries</h1>
